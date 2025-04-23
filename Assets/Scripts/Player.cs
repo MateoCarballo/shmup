@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public float speed = 5f; // This is set in the inspector
     public Rigidbody2D rb; // This is set in the inspector
     private float verticalInput, horizontalInput = 0f;
-    private Vector2 startPos;
+    private Vector2 startPos = new Vector2(0, -3);
 
     //Variables para la interpolacion en el giro
 
@@ -25,14 +25,14 @@ public class Player : MonoBehaviour
     //Variables para lanzamiento de proyectil
     public GameObject bulletPrefab; // Referencia al proycetil
     public Transform shootPoint;    // Punto de disparo 
-    public float bulletSpeed = 10f; // Velocidad de la bala
+    public float bulletSpeed = 15f; // Velocidad de la bala
 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        startPos = transform.position;
+        transform.position = startPos;
         lifes = 3;
         shield = false;
     }
