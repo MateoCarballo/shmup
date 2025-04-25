@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     //Variables para lanzamiento de proyectil
     public GameObject bulletPrefab; // Referencia al proycetil
     public Transform shootPoint;    // Punto de disparo 
-    public float bulletSpeed = 15f; // Velocidad de la bala
+    public float bulletSpeed = 35f; // Velocidad de la bala
 
 
 

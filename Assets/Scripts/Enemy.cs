@@ -6,9 +6,9 @@ public class Enemy : MonoBehaviour
 
     public Rigidbody2D rb;
     public Player player;
-    //Posiciones de aparicion de jugador y enemigos
+    //Posiciones de aparicion de enemigos
     private Vector2 ufoPosition = new Vector2(0, 4);
-
+    private float distanciaCentros = 0f;
     public float ufoVelocity =1.5f;
     public float horizontalPositionPlayer = 0f;
 
@@ -21,19 +21,25 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+
+        distanciaCentros = player.rb.transform.localPosition.x - rb.transform.localPosition.x;
+
+
         //Si el jugador esta a mi izquierda le doy velocidad hacia la izquierda 
-        if (player.rb.transform.localPosition.x < rb.transform.localPosition.x)
+        if (distanciaCentros < -0.05)
         {
             rb.linearVelocity = new Vector2(-1 * ufoVelocity, rb.linearVelocity.y);  
         }
 
         //Si la posicion del jugador esta a la derecha le doy velocidad hacia la derecha  
-        if (player.rb.transform.localPosition.x > rb.transform.localPosition.x)
+        if (distanciaCentros > 0.05)
         {
             rb.linearVelocity = new Vector2(1 * ufoVelocity, rb.linearVelocity.y);
         }
+        // Busca que la distancia en x sea menor a un valor definido
 
-        if (player.rb.transform.localPosition.x == rb.transform.localPosition.x)
+        
+        if (distanciaCentros >  -0.05 && distanciaCentros < 0.05)
         {
             rb.linearVelocity = new Vector2(0,0);
         }

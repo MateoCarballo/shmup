@@ -182,7 +182,7 @@ MonoBehaviour:
   leanSmoothness: 5
   bulletPrefab: {fileID: 6110670076094642290, guid: 0b0af19d2577dac4a89e900a595182ed, type: 3}
   shootPoint: {fileID: 3727564808621022021}
-  bulletSpeed: 10
+  bulletSpeed: 55
 --- !u!1 &3450218847478466938
 GameObject:
   m_ObjectHideFlags: 0
