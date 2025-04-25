@@ -168,4 +168,6 @@ MonoBehaviour:
   rb: {fileID: 4383465100603583856}
   player: {fileID: 0}
   ufoVelocity: 1.5
+  ufoRotationVelocity: 125
+  isUfo: 1
   horizontalPositionPlayer: 0

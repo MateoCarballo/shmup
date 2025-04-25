@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public Player player1;
     public Enemy ufo;
 
     private Boolean enemyAlive = false;
@@ -12,8 +11,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        //Aqui le meto el el vector 3 zero porque la posicion la sabe cada objeto. En su propio metodo start se setea la posicion
-        Player playerInstance = Instantiate(player1,Vector3.zero, Quaternion.identity);
+        //TODO la idea es que el objeto que tiene los puntos de spawn cree todos los enemigos y los active y desactive segun condiciones
         StartCoroutine(SpawnEnemy());
     }
 

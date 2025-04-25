@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public float speed = 5f; // This is set in the inspector
     public Rigidbody2D rb; // This is set in the inspector
     private float verticalInput, horizontalInput = 0f;
-    private Vector2 startPos = new Vector2(0, -3);
+    private Vector2 startPos = new Vector2(0, -4);
 
     //Variables para la interpolacion en el giro
 

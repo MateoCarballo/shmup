@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -11,6 +12,7 @@ public class Enemy : MonoBehaviour
     private float distanciaCentros = 0f;
     public float ufoVelocity = 1.5f;
     [SerializeField] public float ufoRotationVelocity = 125f;
+    [SerializeField] Boolean isUfo;
     public float horizontalPositionPlayer = 0f;
 
     void Start()
