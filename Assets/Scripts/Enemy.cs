@@ -9,14 +9,16 @@ public class Enemy : MonoBehaviour
     //Posiciones de aparicion de enemigos
     private Vector2 ufoPosition = new Vector2(0, 4);
     private float distanciaCentros = 0f;
-    public float ufoVelocity =1.5f;
+    public float ufoVelocity = 1.5f;
+    [SerializeField] public float ufoRotationVelocity = 125f;
     public float horizontalPositionPlayer = 0f;
 
     void Start()
     {
         transform.position = ufoPosition;
         rb = GetComponent<Rigidbody2D>();
-        player = FindFirstObjectByType<Player>(); 
+        player = FindFirstObjectByType<Player>();
+        rb.angularVelocity = ufoRotationVelocity;
     }
 
     void Update()
@@ -28,7 +30,7 @@ public class Enemy : MonoBehaviour
         //Si el jugador esta a mi izquierda le doy velocidad hacia la izquierda 
         if (distanciaCentros < -0.05)
         {
-            rb.linearVelocity = new Vector2(-1 * ufoVelocity, rb.linearVelocity.y);  
+            rb.linearVelocity = new Vector2(-1 * ufoVelocity, rb.linearVelocity.y);
         }
 
         //Si la posicion del jugador esta a la derecha le doy velocidad hacia la derecha  
@@ -38,20 +40,22 @@ public class Enemy : MonoBehaviour
         }
         // Busca que la distancia en x sea menor a un valor definido
 
-        
-        if (distanciaCentros >  -0.05 && distanciaCentros < 0.05)
+
+        if (distanciaCentros > -0.05 && distanciaCentros < 0.05)
         {
-            rb.linearVelocity = new Vector2(0,0);
+            rb.linearVelocity = new Vector2(0, 0);
         }
 
     }
 
-     private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bullet"))
         {
             Destroy(gameObject); // Destruye al enemigo
-            Destroy(collision.gameObject); // Opcional: también destruye la bala
+
+            //AL meter esto el enemigo se come la bala, no espera al trigger del fondo superior de la pantalla
+            Destroy(collision.gameObject);
         }
     }
 }
