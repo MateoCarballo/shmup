@@ -425,7 +425,7 @@ Transform:
   m_GameObject: {fileID: 362751171}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.31, y: -1.07, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -512,7 +512,7 @@ Transform:
   m_GameObject: {fileID: 376551926}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 11, z: 0}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -636,8 +636,8 @@ Transform:
   m_GameObject: {fileID: 422407943}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.52, y: -0.74349785, z: -0.8497938}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 697809585}
@@ -1134,7 +1134,7 @@ Transform:
   m_GameObject: {fileID: 555585357}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.8745837, y: -0.77849233, z: -0.8497938}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1305,7 +1305,7 @@ Transform:
   m_GameObject: {fileID: 697809584}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.31, y: 1.07, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1328,14 +1328,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d22016e65775d9e4299987630405c655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundLayers:
-  - {fileID: 937927711}
-  - {fileID: 422407944}
-  - {fileID: 376551927}
-  - {fileID: 555585358}
-  speeds:
-  - 2.7
-  - 3.8
+  backgroundA1: {fileID: 937927711}
+  backgroundB1: {fileID: 376551927}
+  backgroundA2: {fileID: 422407944}
+  backgroundB2: {fileID: 555585358}
+  speedA: 3
+  speedB: 2
   imageHeight: 10
 --- !u!1 &742317594
 GameObject:
@@ -1725,7 +1723,7 @@ Transform:
   m_GameObject: {fileID: 937927710}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 9, z: 0}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
