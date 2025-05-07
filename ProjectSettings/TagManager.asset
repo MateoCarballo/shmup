@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Fondo
+    uniqueID: 1545046667
+    locked: 0
   - name: ParallaxFar
     uniqueID: 1874359767
     locked: 0

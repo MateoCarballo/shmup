@@ -1,16 +1,42 @@
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public Enemy ufo;
+    public static GameManager Instance { get; private set; }
 
-    private Boolean enemyAlive = false;
-    private Boolean isSpawning = false;
-    private bool isPaused = false;
+    //Singleton para asegurar que solo tengamos una instancia
+
+    private void Awake()
+    {
+        if (Instance = null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    
+
     public Canvas pauseCanvas;
+    private bool isGamePaused = false;
+
+    /*
+     * Referciado al prefab del ufo y al player de la escena 
+     * para poder saber sus propiedades como vida, powerups,etc.
+     */
+    public Player player;
+    public Enemy ufo;
+    private Boolean isSpawning = false;
+
+
     void Start()
     {
         //TODO la idea es que el objeto que tiene los puntos de spawn cree todos los enemigos y los active y desactive segun condiciones
@@ -48,7 +74,7 @@ public class GameManager : MonoBehaviour
     
     public void TogglePause()
     {
-        if (isPaused)
+        if (isGamePaused)
         {
             ResumeGame();
         }
@@ -56,21 +82,21 @@ public class GameManager : MonoBehaviour
         {
             PauseGame();
         }
-        isPaused = !isPaused;
+        isGamePaused = !isGamePaused;
     }
 
     public void PauseGame()
     {
         pauseCanvas.enabled = true; // Mostrar el menú de pausa
         Time.timeScale = 0f; // Pausar el juego
-        isPaused = true;
+        isGamePaused = true;
     }
 
     public void ResumeGame()
     {
         pauseCanvas.enabled = false; // Ocultar el menú de pausa
         Time.timeScale = 1f; // Reanudar el juego
-        isPaused = false;
+        isGamePaused = false;
     }
 
     public void LoadMainMenu()

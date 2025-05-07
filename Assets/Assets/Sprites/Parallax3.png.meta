@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: 35c25da73ffcb1e468f48ca475a1d5e3
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -627346645223605224
+    second: Parallax3_0
+  - first:
+      213: -5403997352880303726
+    second: Parallax3_1
+  - first:
+      213: -8340184687151070217
+    second: Parallax3_2
+  - first:
+      213: -7816460807532900807
+    second: Parallax3_3
+  - first:
+      213: 8215213489422707726
+    second: Parallax3_4
+  - first:
+      213: 3343470799190337264
+    second: Parallax3_5
+  - first:
+      213: -3343796481293082139
+    second: Parallax3_6
+  - first:
+      213: -26525354171798594
+    second: Parallax3_7
+  - first:
+      213: 2485682725487935907
+    second: Parallax3_8
+  - first:
+      213: 1778196237411330053
+    second: Parallax3_9
+  - first:
+      213: -2908074134915940625
+    second: Parallax3_10
+  - first:
+      213: -7295748029130226581
+    second: Parallax3_11
+  - first:
+      213: 5763926095268993347
+    second: Parallax3_12
+  - first:
+      213: 8270546258381146674
+    second: Parallax3_13
+  - first:
+      213: -4636281466280870883
+    second: Parallax3_14
+  - first:
+      213: 2641365025471085650
+    second: Parallax3_15
+  - first:
+      213: -624479828169855646
+    second: Parallax3_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Parallax3_0
+      rect:
+        serializedVersion: 2
+        x: 1314
+        y: 939
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81cf96ccc873b47f0800000000000000
+      internalID: -627346645223605224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_1
+      rect:
+        serializedVersion: 2
+        x: 702
+        y: 901
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2911b660a052105b0800000000000000
+      internalID: -5403997352880303726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_2
+      rect:
+        serializedVersion: 2
+        x: 1725
+        y: 896
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f345391736b14c80800000000000000
+      internalID: -8340184687151070217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_3
+      rect:
+        serializedVersion: 2
+        x: 345
+        y: 858
+        width: 47
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93e0d361f4a568390800000000000000
+      internalID: -7816460807532900807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_4
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 752
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0ca90f742d420270800000000000000
+      internalID: 8215213489422707726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_5
+      rect:
+        serializedVersion: 2
+        x: 1110
+        y: 756
+        width: 45
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f6a1a63af4666e20800000000000000
+      internalID: 3343470799190337264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_6
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 678
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e1235301d27891d0800000000000000
+      internalID: -3343796481293082139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_7
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 659
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebb6c07b453c1aff0800000000000000
+      internalID: -26525354171798594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_8
+      rect:
+        serializedVersion: 2
+        x: 835
+        y: 561
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a18805e44bee7220800000000000000
+      internalID: 2485682725487935907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_9
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 525
+        width: 31
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 508a6df7e0c6da810800000000000000
+      internalID: 1778196237411330053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_10
+      rect:
+        serializedVersion: 2
+        x: 1645
+        y: 462
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fee75df5bf174a7d0800000000000000
+      internalID: -2908074134915940625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_11
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 418
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b64cfe072db40ca90800000000000000
+      internalID: -7295748029130226581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_12
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 383
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 349dc1cbe349dff40800000000000000
+      internalID: 5763926095268993347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_13
+      rect:
+        serializedVersion: 2
+        x: 1353
+        y: 225
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23a8e35b002e6c270800000000000000
+      internalID: 8270546258381146674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_14
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 125
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1cf99b029e98afb0800000000000000
+      internalID: -4636281466280870883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_15
+      rect:
+        serializedVersion: 2
+        x: 821
+        y: 89
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25c38510f7308a420800000000000000
+      internalID: 2641365025471085650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Parallax3_16
+      rect:
+        serializedVersion: 2
+        x: 1845
+        y: 74
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26de988a7e66557f0800000000000000
+      internalID: -624479828169855646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Parallax3_0: -627346645223605224
+      Parallax3_1: -5403997352880303726
+      Parallax3_10: -2908074134915940625
+      Parallax3_11: -7295748029130226581
+      Parallax3_12: 5763926095268993347
+      Parallax3_13: 8270546258381146674
+      Parallax3_14: -4636281466280870883
+      Parallax3_15: 2641365025471085650
+      Parallax3_16: -624479828169855646
+      Parallax3_2: -8340184687151070217
+      Parallax3_3: -7816460807532900807
+      Parallax3_4: 8215213489422707726
+      Parallax3_5: 3343470799190337264
+      Parallax3_6: -3343796481293082139
+      Parallax3_7: -26525354171798594
+      Parallax3_8: 2485682725487935907
+      Parallax3_9: 1778196237411330053
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
