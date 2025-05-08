@@ -1,14 +1,16 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
     //Variables para la posicion de la nave 
-   
+
     public float speed = 5f; // This is set in the inspector
     public Rigidbody2D rb; // This is set in the inspector
     private float verticalInput, horizontalInput = 0f;
     private Vector2 startPos = new Vector2(0, -4);
+    private Vector3 originalScale;
 
     //Variables para la interpolacion en el giro
 
@@ -25,7 +27,7 @@ public class Player : MonoBehaviour
     //Variables para lanzamiento de proyectil
     public GameObject bulletPrefab; // Referencia al proycetil
     public Transform shootPoint;    // Punto de disparo 
-    public float bulletSpeed = 35f; // Velocidad de la bala
+    [SerializeField] private float bulletSpeed = 10f; // Velocidad de la bala
 
 
 
@@ -35,6 +37,7 @@ public class Player : MonoBehaviour
         transform.position = startPos;
         lifes = 3;
         shield = false;
+        originalScale = transform.localScale;
     }
 
     // Update is called once per frame
@@ -49,7 +52,7 @@ public class Player : MonoBehaviour
 
 
         // Calcular escala objetivo seg�n movimiento horizontal
-        float targetScaleX = 1f - Mathf.Abs(horizontalInput) * leanAmount;
+        float targetScaleX = originalScale.x - Mathf.Abs(horizontalInput) * leanAmount;
 
         /*
          Esto genera una interpolacion
@@ -57,19 +60,22 @@ public class Player : MonoBehaviour
         Donde t es una transicion suave si importar el frame-rate " Time.deltaTime * leanSmoothness" 
         Genera una curva para llegar de un tama�o(escala) a otro y que no se aprecie un salto entre un punto y otro.
          */
-        currentScaleX = Mathf.Lerp(currentScaleX, targetScaleX, Time.deltaTime * leanSmoothness);
+
+        float currentXScale = Mathf.Lerp(transform.localScale.x, targetScaleX, Time.deltaTime * leanSmoothness);
+        transform.localScale = new Vector3(currentXScale, originalScale.y, originalScale.z);
+
         /*
          Una vez definido como queremos que se "encoja" la nave pasamos este nuevo valor de "X" al parametro localScale. 
         De modo que dejamos la escala y,z como est�. 
         Y escalamos por un % el valor en X
         */
-        transform.localScale = new Vector3(currentScaleX, 1f, 1f);
-        
+        transform.localScale = new Vector3(originalScale.x, 1.5f, 1f);
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             shoot();
         }
-    
+
     }
 
 
@@ -79,7 +85,7 @@ public class Player : MonoBehaviour
     {
         // Instanciar un proyectil en el punto de disparo
         GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
-        
+
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.linearVelocity = Vector2.up * bulletSpeed;
 
