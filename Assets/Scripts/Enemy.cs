@@ -29,7 +29,11 @@ public class Enemy : MonoBehaviour
             {
                 moveEnemyToScene();
             }
-            followPlayer();
+            else
+            {
+                followPlayer();
+
+            }
         }
     }
 
