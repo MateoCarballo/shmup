@@ -14,6 +14,18 @@ public class Enemy : MonoBehaviour
 
     private bool isEntering = true; // Si el enemigo está en proceso de entrada
 
+
+    //Variables para movimiento infinito
+    [SerializeField] private float infinityTime = 0f;
+    [SerializeField] public float infinitySpeed = 1f;
+    [SerializeField] public float infinityWidth = 0.5f;
+    [SerializeField] public float infinityHeight = 0.25f;
+    [SerializeField] public float followLerpSpeed = 2f;
+
+    private Vector2 centerOffset;
+
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -31,8 +43,9 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                followPlayer();
-
+                InfinityMove();
+                //TODO BombDropLogic();
+                //followPlayerOnX();
             }
         }
     }
@@ -50,11 +63,36 @@ public class Enemy : MonoBehaviour
         {
             transform.position = moveTarget; // Asegúrate de que esté exactamente en el target
             rb.linearVelocity = Vector2.zero; // Detenemos el movimiento
+
+            //Necesario para el movimiento infinito
+            centerOffset = transform.position - player.transform.position;
+            infinityTime = 0f;
+
+
             isEntering = false;
         }
     }
+    private void InfinityMove()
+    {
+        infinityTime += Time.deltaTime * infinitySpeed;
 
-    private void followPlayer()
+        // Trayectoria tipo ∞ (lemniscata)
+        float x = Mathf.Sin(infinityTime) * infinityWidth;
+        float y = Mathf.Sin(infinityTime * 2) * infinityHeight;
+
+        // El centro del patrón sigue al jugador suavemente
+        Vector2 targetCenter = (Vector2)player.transform.position + centerOffset;
+        Vector2 currentCenter = Vector2.Lerp(transform.position, targetCenter, Time.deltaTime * followLerpSpeed);
+
+        Vector2 offset = new Vector2(x, y);
+        rb.MovePosition(currentCenter + offset);
+    }
+
+
+
+    //Este metodo fue el primero seguia al jugador sin moverse en Y a través del eje X
+
+    private void followPlayerOnX()
     {
         // Movimiento para seguir al jugador, solo en X
         float distanciaCentros = player.rb.transform.position.x - transform.position.x;
