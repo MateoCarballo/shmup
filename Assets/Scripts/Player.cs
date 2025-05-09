@@ -30,6 +30,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float bulletSpeed = 10f; // Velocidad de la bala
 
 
+    //Activacion de imagenes que simulan propulsion
+    [Header("Thrusters")]
+    [SerializeField] private GameObject thrusterL;              // Tecla A (izquierda)
+    [SerializeField] private GameObject thrusterD;              // Tecla D (derecha)
+    [SerializeField] private GameObject thrusterBackward;       // Tecla W (propulsión frontal)
+    [SerializeField] private GameObject thrusterForward;        // Tecla S (propulsión trasera)
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -48,7 +55,9 @@ public class Player : MonoBehaviour
          */
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        rb.linearVelocity = new Vector2(horizontalInput * speed, verticalInput * speed);
+        UpdateThrusters();
+        Vector2 newLinearVelocity = new Vector2(horizontalInput * speed, verticalInput * speed);
+        rb.linearVelocity = newLinearVelocity;
 
 
         // Calcular escala objetivo seg�n movimiento horizontal
@@ -76,6 +85,17 @@ public class Player : MonoBehaviour
             shoot();
         }
 
+    }
+
+    private void UpdateThrusters()
+    {
+        // Control horizontal (A/D)
+        thrusterL.SetActive(horizontalInput < 0);  // Activa L con tecla A
+        thrusterD.SetActive(horizontalInput > 0);  // Activa D con tecla D
+
+        // Control vertical (W/S)
+        thrusterBackward.SetActive(verticalInput > 0); // Activa backward con W
+        thrusterForward.SetActive(verticalInput < 0);  // Activa forward con S
     }
 
 
