@@ -23,16 +23,16 @@ public class Enemy : MonoBehaviour
     [SerializeField] public float followLerpSpeed = 2f;
     private Vector2 centerOffset;
 
-    // Añade estas variables en la clase
-    [SerializeField] private Transform spriteTransform; // Referencia al transform del sprite
+    // Referencia al componente hijo encargado de la parte visual unicamente y la velocidad de gito
+    [SerializeField] private Transform spriteTransform; // Referencia al transform de la imagen del ufo
     [SerializeField] private float spriteRotationSpeed = 200f; // Velocidad de rotación visual
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        //rb.angularVelocity = ufoRotationVelocity;
         player = FindFirstObjectByType<Player>();
+        rb.freezeRotation = true;
     }
 
     void Update()
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
             else
             {
                 InfinityMove();
-                RotateSprite();
+                RotateSprite(); //Este metodo simula la rotacion pero solo mueve la imagen
                 //TODO BombDropLogic();
                 //followPlayerOnX();
             }
