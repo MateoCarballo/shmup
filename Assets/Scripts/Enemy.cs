@@ -15,21 +15,23 @@ public class Enemy : MonoBehaviour
     private bool isEntering = true; // Si el enemigo está en proceso de entrada
 
 
-    //Variables para movimiento infinito
+    //Variables para movimiento infinito en la curva 
     [SerializeField] private float infinityTime = 0f;
     [SerializeField] public float infinitySpeed = 1f;
-    [SerializeField] public float infinityWidth = 0.5f;
-    [SerializeField] public float infinityHeight = 0.25f;
+    [SerializeField] public float infinityWidthMultiplier = 0.3f;
+    [SerializeField] public float infinityHeightMultiplier = 0.12f;
     [SerializeField] public float followLerpSpeed = 2f;
-
     private Vector2 centerOffset;
 
+    // Añade estas variables en la clase
+    [SerializeField] private Transform spriteTransform; // Referencia al transform del sprite
+    [SerializeField] private float spriteRotationSpeed = 200f; // Velocidad de rotación visual
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.angularVelocity = ufoRotationVelocity;
+        //rb.angularVelocity = ufoRotationVelocity;
         player = FindFirstObjectByType<Player>();
     }
 
@@ -44,6 +46,7 @@ public class Enemy : MonoBehaviour
             else
             {
                 InfinityMove();
+                RotateSprite();
                 //TODO BombDropLogic();
                 //followPlayerOnX();
             }
@@ -74,18 +77,56 @@ public class Enemy : MonoBehaviour
     }
     private void InfinityMove()
     {
+        /*
+         * Intento de que describa un simbolo del infinito basandome en las ecuaciones de la curba Lemniscata de Bernuilli cuyas ecuaciones parametricas en funcion de t son:
+            Ecuación paramétrica
+           x(t) = (a * cos(t)) / (1 + sin²(t))
+           y(t) = (a * sin(t) * cos(t)) / (1 + sin²(t))
+
+            Ecuacion implicita
+            (x² + y²)² = 2a²(x² - y²)
+
+         */
+
+        //Avanza el tiempo usando Time.deltaTime y multiplicado por infinitySpeed para controlar la velocidad del recorrido por la curva.
         infinityTime += Time.deltaTime * infinitySpeed;
 
-        // Trayectoria tipo ∞ (lemniscata)
-        float x = Mathf.Sin(infinityTime) * infinityWidth;
-        float y = Mathf.Sin(infinityTime * 2) * infinityHeight;
+        //Nuestro tiempo, simplemente uso t porque es mas legible
+        float t = infinityTime;
 
-        // El centro del patrón sigue al jugador suavemente
+        // Calculo de las posiciones sobre la curva (Ecuaciones parametricas)
+
+        //Calculo del denominador comun de las ecuaciones (1 + sin²(t))
+        float denominator = 1 + Mathf.Pow(Mathf.Sin(t),2);
+
+        //Calculo de la posicion x sobre la curva(infinityWidth es el multiplicador que lo escala en el ancho, coordenada x)
+        float x = (infinityWidthMultiplier * Mathf.Cos(t)) / denominator;
+
+        //Calculo de la posicion y sobre la curva(infinityHeight es el multiplicador que lo escala en el alto, coordenada y)
+        float y = (infinityHeightMultiplier * Mathf.Sin(t) * Mathf.Cos(t)) / denominator;
+
+        //Seguimiento del jugador a través de la escena
+
+        //Calcula en centro objetivo sobre el que se realizara la curva con un offset
         Vector2 targetCenter = (Vector2)player.transform.position + centerOffset;
-        Vector2 currentCenter = Vector2.Lerp(transform.position, targetCenter, Time.deltaTime * followLerpSpeed);
 
-        Vector2 offset = new Vector2(x, y);
-        rb.MovePosition(currentCenter + offset);
+        //Interpola suavemente entre un centro y el siguiente, haciendo una transicion suave.
+        //FollowSpeed hace que consiga llegar a su posicion mas rapido o lento, util si queremos hacer que cada enemigo sea mas rapido que el anterior.
+
+        
+        Vector2 currentCenter = Vector2.Lerp(
+            transform.position,                 //  Posición actual
+            targetCenter,                       //  Poiscion objetivo
+            Time.deltaTime * followLerpSpeed);  //  Factor de interpolacion, cuanto de rapido sera la transici;on
+
+
+        // ##############       APLICACION DEL MOVIMIENTO       ##############
+
+        //Nueva posicion del enemigo
+        Vector2 newPosition = currentCenter + new Vector2(x, y);
+
+        //Mueve el rigibody manteniendo las fisicas 
+        rb.MovePosition(newPosition);
     }
 
 
@@ -108,6 +149,15 @@ public class Enemy : MonoBehaviour
         else
         {
             rb.linearVelocity = Vector2.zero; // Si está cerca del jugador, lo detiene
+        }
+    }
+
+    private void RotateSprite()
+    {
+        if (spriteTransform != null)
+        {
+            // Rota solo el sprite, no el GameObject principal
+            spriteTransform.Rotate(Vector3.forward * spriteRotationSpeed * Time.deltaTime);
         }
     }
 
