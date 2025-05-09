@@ -58,8 +58,8 @@ public class Player : MonoBehaviour
          */
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        //UpdateThrusters();
-        ControlParticleAnimation();
+        UpdateThrusters();
+        // ControlParticleAnimation();
         Vector2 newLinearVelocity = new Vector2(horizontalInput * speed, verticalInput * speed);
         rb.linearVelocity = newLinearVelocity;
 
