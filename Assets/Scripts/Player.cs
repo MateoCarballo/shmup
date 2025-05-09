@@ -37,6 +37,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject thrusterBackward;       // Tecla W (propulsión frontal)
     [SerializeField] private GameObject thrusterForward;        // Tecla S (propulsión trasera)
 
+    [Header("Particle Effects")]
+    [SerializeField] private ParticleSystem thrusterEffect1;
+    [SerializeField] private ParticleSystem thrusterEffect2;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -55,7 +58,8 @@ public class Player : MonoBehaviour
          */
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        UpdateThrusters();
+        //UpdateThrusters();
+        ControlParticleAnimation();
         Vector2 newLinearVelocity = new Vector2(horizontalInput * speed, verticalInput * speed);
         rb.linearVelocity = newLinearVelocity;
 
@@ -87,6 +91,20 @@ public class Player : MonoBehaviour
 
     }
 
+    private void ControlParticleAnimation()
+    {
+        // Lógica para activar/desactivar partículas
+        if (verticalInput > 0)
+        {
+            if (!thrusterEffect1.isPlaying) thrusterEffect1.Play();
+            if (!thrusterEffect2.isPlaying) thrusterEffect2.Play();
+        }
+        else
+        {
+            if (thrusterEffect1.isPlaying) thrusterEffect1.Stop();
+            if (thrusterEffect2.isPlaying) thrusterEffect2.Stop();
+        }
+    }
     private void UpdateThrusters()
     {
         // Control horizontal (A/D)

@@ -252,6 +252,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20488132}
   m_CullTransparentMesh: 1
+--- !u!198 &22115875 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+  m_PrefabInstance: {fileID: 912380884}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &68073418 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3783898989079326626, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
@@ -1851,6 +1856,50 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1224305786668382682, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_Name
+      value: L_Particle
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: UVModule.mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: UVModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: NoiseModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: SizeModule.curve.minScalar
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: UVModule.sprites.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: UVModule.sprites.Array.data[0].sprite
+      value: 
+      objectReference: {fileID: 3862238176102804936, guid: f99fbc81c9b97544a906a6782bfcf827, type: 3}
+    - target: {fileID: 1686953835520877709, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: UVModule.sprites.Array.data[1].sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2533039042199713141, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_Name
+      value: R_Particle
+      objectReference: {fileID: 0}
     - target: {fileID: 2931591502698249972, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: m_SortingOrder
       value: -1
@@ -1870,6 +1919,18 @@ PrefabInstance:
     - target: {fileID: 4067127408169976274, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: bulletSpeed
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744456433892154735, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: SizeModule.curve.minScalar
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744456433892154735, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4744456433892154735, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7731493156843071530, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: m_Name
@@ -2246,6 +2307,11 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!198 &1041568171 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4744456433892154735, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+  m_PrefabInstance: {fileID: 912380884}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1053054969
 GameObject:
   m_ObjectHideFlags: 0
@@ -3102,6 +3168,8 @@ MonoBehaviour:
   thrusterD: {fileID: 1860011504}
   thrusterBackward: {fileID: 896231659}
   thrusterForward: {fileID: 68073418}
+  thrusterEffect1: {fileID: 22115875}
+  thrusterEffect2: {fileID: 1041568171}
 --- !u!1 &1810080087
 GameObject:
   m_ObjectHideFlags: 0
