@@ -58,8 +58,8 @@ public class Player : MonoBehaviour
          */
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        //UpdateThrusters();
-        ControlParticleAnimation();
+        UpdateThrusters();
+        //ControlParticleAnimation();
         Vector2 newLinearVelocity = new Vector2(horizontalInput * speed, verticalInput * speed);
         rb.linearVelocity = newLinearVelocity;
 
@@ -123,7 +123,8 @@ public class Player : MonoBehaviour
     {
         // Instanciar un proyectil en el punto de disparo
         GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
-
+        //Sonido asociado a disparar
+        GetComponent<AudioSource>().Play();
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.linearVelocity = Vector2.up * bulletSpeed;
 
