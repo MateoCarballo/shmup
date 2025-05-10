@@ -1,20 +1,22 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    public static GameManager GameManagerInstance { get; private set; }
 
     //Singleton para asegurar que solo tengamos una instancia
 
     private void Awake()
     {
-        if (Instance == null)
+        if (GameManagerInstance == null)
         {
-            Instance = this;
+            GameManagerInstance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -34,6 +36,24 @@ public class GameManager : MonoBehaviour
     public Enemy ufo;
     private Boolean isSpawning = false;
 
+
+    //Canvas del ui con las variables asociadas con las vidas, powerups y puntuacion
+    public Canvas uiCanvas;
+    // Puntuacion
+    [SerializeField] private TextMeshProUGUI uiNumberScore;
+    private int score;
+    // Vidas
+    private int lifes;
+    // Activado o no powerup
+    private bool shield;
+    private bool speedBoost;
+    private bool multipleShoot;
+    //Variables para controlar los powerups
+    private int speedMultiplier;
+    private int speedBoostTime;
+    private int multipleShootTime;
+
+
     // Update is called once per frame
     void Update()
     {
@@ -42,6 +62,12 @@ public class GameManager : MonoBehaviour
             TogglePause(); // Metodo para gestionar el activar o desactivar la escena del menu de pausa
         }
  
+    }
+
+    public void AddScore(int points)
+    {
+        score += points;
+        uiNumberScore.text = score.ToString();
     }
     
     public void TogglePause()
@@ -57,6 +83,10 @@ public class GameManager : MonoBehaviour
         isGamePaused = !isGamePaused;
     }
 
+
+
+
+    //Metodos asociados a pausar el juego y reanudarlo
     public void PauseGame()
     {
         pauseCanvas.enabled = true; // Mostrar el menú de pausa

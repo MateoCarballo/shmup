@@ -178,6 +178,7 @@ public class Enemy : MonoBehaviour
             ControlParticleAnimation(); //Activa particulas del coche
             // Destruye la bala
             Destroy(collision.gameObject);
+            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().AddScore(10);
         }
     }
 
