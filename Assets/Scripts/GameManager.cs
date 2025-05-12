@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     public Canvas uiCanvas;
     // Puntuacion
     [SerializeField] private TextMeshProUGUI uiNumberScore;
-    private int score;
+    [SerializeField] private int score = 0;
     // Vidas
     private int lifes;
     // Activado o no powerup
