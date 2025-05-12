@@ -1,36 +1,84 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    // -------------------- REFERENCIAS --------------------
+    [Header("Referencias")]
     public Rigidbody2D rb;
     public Player player;
 
-    private Vector2 moveTarget;
-    private bool hasTarget = false;
-
+    // -------------------- MOVIMIENTO DE ENTRADA --------------------
+    [Header("Movimiento Inicial")]
+    [Tooltip("Velocidad con la que entra a la escena")]
     public float ufoVelocity = 1.5f;
+
+    [Tooltip("Velocidad angular (si se usa para rotación física)")]
     [SerializeField] public float ufoRotationVelocity = 125f;
 
-    private bool isEntering = true; // Si el enemigo está en proceso de entrada
+    private Vector2 moveTarget;
+    private bool hasTarget = false;
+    private bool isEntering = true;
 
-
-    //Variables para movimiento infinito en la curva 
+    // -------------------- MOVIMIENTO INFINITO --------------------
+    [Header("Movimiento Curva Infinita")]
     [SerializeField] private float infinityTime = 0f;
+
+    [Tooltip("Velocidad de avance por la curva")]
     [SerializeField] public float infinitySpeed = 1f;
-    [SerializeField] public float infinityWidthMultiplier = 0.3f;
-    [SerializeField] public float infinityHeightMultiplier = 0.12f;
+
+    [Tooltip("Escala horizontal de la curva")]
+    [SerializeField] public float infinityWidthMultiplier = 0.1f;
+
+    [Tooltip("Escala vertical de la curva")]
+    [SerializeField] public float infinityHeightMultiplier = 0.04f;
+
+    [Tooltip("Qué tan rápido sigue al jugador en su movimiento")]
     [SerializeField] public float followLerpSpeed = 2f;
+
     private Vector2 centerOffset;
 
-    // Referencia al componente hijo encargado de la parte visual unicamente y la velocidad de gito
-    [SerializeField] private Transform spriteTransform; // Referencia al transform de la imagen del ufo
-    [SerializeField] private float spriteRotationSpeed = 200f; // Velocidad de rotación visual
+    // -------------------- ROTACIÓN VISUAL --------------------
+    [Header("Rotación Visual del Sprite")]
+    [Tooltip("Transform del sprite que rota visualmente")]
+    [SerializeField] private Transform spriteTransform;
 
+    [Tooltip("Velocidad de rotación visual del sprite")]
+    [SerializeField] private float spriteRotationSpeed = 200f;
 
-    [Header("Particle Effects")]
+    // -------------------- DISPARO AL JUGADOR --------------------
+    [Header("Sistema de Disparo")]
+    [Tooltip("Prefab de la bala enemiga")]
+    [SerializeField] private GameObject enemyBulletPrefab;
+
+    [Tooltip("Tiempo entre cada disparo")]
+    [SerializeField] private float fireInterval = 5f;
+
+    private float fireTimer = 0f;
+
+    // -------------------- CONFIGURACIÓN DE BALAS --------------------
+    [Header("Parámetros de Proyectil")]
+    [Tooltip("Prefab del proyectil (opcional alternativo)")]
+    public GameObject bulletPrefab;
+
+    [Tooltip("Transform desde donde se dispara")]
+    public Transform shootPoint;
+
+    [Tooltip("Velocidad de la bala")]
+    [SerializeField] private float bulletSpeed = 10f;
+
+    // -------------------- AUTODESTRUCCIÓN --------------------
+    [Header("Autodestrucción")]
+    [Tooltip("Tiempo máximo de vida del enemigo")]
+    [SerializeField] private float selfDestructTime = 15f;
+
+    private float timeAlive = 0f;
+
+    // -------------------- EFECTOS VISUALES --------------------
+    [Header("Partículas")]
+    [Tooltip("Efecto al ser golpeado")]
     [SerializeField] private ParticleSystem hittedEfect;
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -40,6 +88,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        RotateSprite();
         if (hasTarget)
         {
             if (isEntering)
@@ -49,9 +98,25 @@ public class Enemy : MonoBehaviour
             else
             {
                 InfinityMove();
-                RotateSprite(); //Este metodo simula la rotacion pero solo mueve la imagen
+                
+                //Este metodo simula la rotacion pero solo mueve la imagen
                 //TODO BombDropLogic();
                 //followPlayerOnX();
+
+                //Contadores para autodestruccion y disparo jugador
+                fireTimer += Time.deltaTime;
+                timeAlive += Time.deltaTime;
+
+                if (fireTimer >= fireInterval)
+                {
+                    ShootPlayer();
+                    fireTimer = 0f;
+                }
+
+                if (timeAlive >= selfDestructTime)
+                {
+                    ExitSceneAndDestroy();
+                }
             }
         }
     }
@@ -74,8 +139,9 @@ public class Enemy : MonoBehaviour
             centerOffset = transform.position - player.transform.position;
             infinityTime = 0f;
 
-
             isEntering = false;
+
+            timeAlive = 0f;
         }
     }
     private void InfinityMove()
@@ -100,7 +166,7 @@ public class Enemy : MonoBehaviour
         // Calculo de las posiciones sobre la curva (Ecuaciones parametricas)
 
         //Calculo del denominador comun de las ecuaciones (1 + sin²(t))
-        float denominator = 1 + Mathf.Pow(Mathf.Sin(t),2);
+        float denominator = 1 + Mathf.Pow(Mathf.Sin(t), 2);
 
         //Calculo de la posicion x sobre la curva(infinityWidth es el multiplicador que lo escala en el ancho, coordenada x)
         float x = (infinityWidthMultiplier * Mathf.Cos(t)) / denominator;
@@ -116,7 +182,7 @@ public class Enemy : MonoBehaviour
         //Interpola suavemente entre un centro y el siguiente, haciendo una transicion suave.
         //FollowSpeed hace que consiga llegar a su posicion mas rapido o lento, util si queremos hacer que cada enemigo sea mas rapido que el anterior.
 
-        
+
         Vector2 currentCenter = Vector2.Lerp(
             transform.position,                 //  Posición actual
             targetCenter,                       //  Poiscion objetivo
@@ -170,6 +236,34 @@ public class Enemy : MonoBehaviour
         hasTarget = true;
     }
 
+
+    private void ShootPlayer()
+    {
+        if (enemyBulletPrefab == null || player == null) return;
+
+        GameObject bullet = Instantiate(enemyBulletPrefab, transform.position, Quaternion.identity);
+        Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+
+        if (bulletRb != null)
+        {
+            // Posición y velocidad del jugador
+            Vector2 playerPos = player.transform.position;
+            Vector2 playerVel = player.rb != null ? player.rb.linearVelocity : Vector2.zero;
+
+            // Tiempo estimado que tardará la bala en llegar al jugador
+            float distance = Vector2.Distance(transform.position, playerPos);
+            float estimatedTime = distance / bulletSpeed;
+
+            // Posición futura estimada del jugador
+            Vector2 futurePos = playerPos + playerVel * estimatedTime;
+
+            // Dirección mejorada con predicción
+            Vector2 direction = (futurePos - (Vector2)transform.position).normalized;
+
+            bulletRb.linearVelocity = direction * bulletSpeed;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bullet"))
@@ -178,9 +272,19 @@ public class Enemy : MonoBehaviour
             ControlParticleAnimation(); //Activa particulas del coche
             // Destruye la bala
             Destroy(collision.gameObject);
-            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().AddScore(10);
+            GameManager.GameManagerInstance.AddScore(10);
         }
     }
+
+    private void ExitSceneAndDestroy()
+    {
+        // Sale hacia arriba o dirección deseada
+        rb.linearVelocity = Vector2.up * 3f;
+
+        // Destruir tras unos segundos para asegurarse de que sale de pantalla
+        Destroy(gameObject, 2f);
+    }
+
 
     private void ControlParticleAnimation()
     {

@@ -121,6 +121,7 @@ Transform:
   m_Children:
   - {fileID: 1717361582101497465}
   - {fileID: 6841544184636547145}
+  - {fileID: 347499110259833517}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &4383465100603583856
@@ -204,12 +205,49 @@ MonoBehaviour:
   ufoRotationVelocity: 150
   infinityTime: 0
   infinitySpeed: 1
-  infinityWidthMultiplier: 0.3
-  infinityHeightMultiplier: 0.12
+  infinityWidthMultiplier: 0.1
+  infinityHeightMultiplier: 0.04
   followLerpSpeed: 2
   spriteTransform: {fileID: 1717361582101497465}
   spriteRotationSpeed: 200
+  enemyBulletPrefab: {fileID: 4069657004465444412, guid: bcf84396b13af5247a7a0af2cafaaa77, type: 3}
+  fireInterval: 5
+  bulletPrefab: {fileID: 4069657004465444412, guid: bcf84396b13af5247a7a0af2cafaaa77, type: 3}
+  shootPoint: {fileID: 347499110259833517}
+  bulletSpeed: 5
+  selfDestructTime: 20
   hittedEfect: {fileID: 8692054763550025763}
+--- !u!1 &7159725510854741864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 347499110259833517}
+  m_Layer: 0
+  m_Name: ShootPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &347499110259833517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7159725510854741864}
+  serializedVersion: 2
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: -0.58, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2243899790722808280}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
 --- !u!1 &7746583747633690505
 GameObject:
   m_ObjectHideFlags: 0
