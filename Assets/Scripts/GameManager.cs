@@ -75,13 +75,14 @@ public class GameManager : MonoBehaviour
     {
         if (lifesIndex >= 0)
         {
-            lifesIndex--;
             lifesSprites[lifesIndex].gameObject.SetActive(false);
+            lifesIndex--;
         }
         else
         {
             // Escena final con la puntuacion y la opcion de ir al menú principal
             // SceneManager.LoadScene("GameOverScene");
+            SceneManager.LoadScene("MainMenu");
         }
     }
 
