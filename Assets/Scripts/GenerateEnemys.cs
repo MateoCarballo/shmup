@@ -19,7 +19,7 @@ public class GenerateEnemys : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             GameObject enemy = Instantiate(ufoPrefab, spawnPoint.position, Quaternion.identity);
-            enemy.GetComponent<Enemy>().SetTarget(targetPosition.position); // ← nuevo
+            enemy.GetComponent<Enemy>().SetTarget(targetPosition.position); 
             enemy.SetActive(false); // Opcional: empieza oculto
             enemys.Add(enemy);
         }

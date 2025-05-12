@@ -457,7 +457,7 @@ GameObject:
   - component: {fileID: 291550815}
   - component: {fileID: 291550816}
   m_Layer: 0
-  m_Name: playerLife1_blue
+  m_Name: PlayerLife1_blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3232,6 +3232,10 @@ MonoBehaviour:
   uiCanvas: {fileID: 1291375638}
   uiNumberScore: {fileID: 1344487844}
   score: 0
+  lifesSprites:
+  - {fileID: 291550816}
+  - {fileID: 1388367880}
+  - {fileID: 1233272685}
 --- !u!4 &1053054971
 Transform:
   m_ObjectHideFlags: 0
@@ -3657,7 +3661,7 @@ GameObject:
   - component: {fileID: 1233272684}
   - component: {fileID: 1233272685}
   m_Layer: 0
-  m_Name: playerLife3_blue
+  m_Name: PlayerLife3_blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4189,7 +4193,7 @@ GameObject:
   - component: {fileID: 1388367879}
   - component: {fileID: 1388367880}
   m_Layer: 0
-  m_Name: playerLife2_blue
+  m_Name: PlayerLife2_blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4730,6 +4734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f12c52b7abf1548bffaa2fabc4fb58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
   speed: 5
   rb: {fileID: 1796808109}
   leanAmount: 0.25

@@ -42,8 +42,9 @@ public class GameManager : MonoBehaviour
     // Puntuacion
     [SerializeField] private TextMeshProUGUI uiNumberScore;
     [SerializeField] private int score = 0;
-    // Vidas
-    private int lifes;
+    // Numero de vidas y lista con los sprites de la UI
+    private int lifesIndex = 2;
+    [SerializeField] private SpriteRenderer[] lifesSprites;
     // Activado o no powerup
     private bool shield;
     private bool speedBoost;
@@ -61,7 +62,7 @@ public class GameManager : MonoBehaviour
         {
             TogglePause(); // Metodo para gestionar el activar o desactivar la escena del menu de pausa
         }
- 
+
     }
 
     public void AddScore(int points)
@@ -69,7 +70,16 @@ public class GameManager : MonoBehaviour
         score += points;
         uiNumberScore.text = score.ToString();
     }
-    
+
+    public void QuitLife()
+    {
+        if (lifesIndex >= 0)
+        {
+            lifesIndex--;
+            lifesSprites[lifesIndex].gameObject.SetActive(false);
+        }
+    }
+
     public void TogglePause()
     {
         if (isGamePaused)

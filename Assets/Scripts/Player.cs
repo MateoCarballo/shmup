@@ -4,8 +4,9 @@ using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
-    //Variables para la posicion de la nave 
 
+    public GameManager gameManager;
+    //Variables para la posicion de la nave 
     public float speed = 5f; // This is set in the inspector
     public Rigidbody2D rb; // This is set in the inspector
     private float verticalInput, horizontalInput = 0f;
@@ -150,6 +151,13 @@ public class Player : MonoBehaviour
         if (!shield)
         {
             shield = true;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("EnemyBullet")){
+            GameManager.GameManagerInstance.QuitLife();
         }
     }
 }
