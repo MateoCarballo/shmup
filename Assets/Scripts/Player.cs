@@ -156,8 +156,33 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("EnemyBullet")){
+        if (collision.CompareTag("EnemyBullet"))
+        {
+            // Obtener los SpriteRenderers hijos (hay varias formas; aquí es directa)
+            Transform bulletTransform = collision.transform;
+
+            SpriteRenderer[] sprites = bulletTransform.GetComponentsInChildren<SpriteRenderer>(true); // Incluye inactivos
+
+            if (sprites.Length >= 2)
+            {
+                sprites[0].gameObject.SetActive(false); // Oculta sprite normal
+                sprites[1].gameObject.SetActive(true);  // Muestra sprite de impacto
+            }
+
+            // Parar el movimiento
+            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+                rb.isKinematic = true;
+            }
+
+            // Quitar vida
             GameManager.GameManagerInstance.QuitLife();
+
+            // Destruir después de mostrar el sprite de impacto
+            Destroy(collision.gameObject, 0.1f);
         }
     }
 }
