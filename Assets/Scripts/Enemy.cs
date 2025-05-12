@@ -87,6 +87,7 @@ public class Enemy : MonoBehaviour
     [Header("Partículas")]
     [Tooltip("Efecto al ser golpeado")]
     [SerializeField] private ParticleSystem hittedEfect;
+    [SerializeField] private GameObject[] powerUpTypes;
 
     void Start()
     {
@@ -228,6 +229,18 @@ public class Enemy : MonoBehaviour
             ControlParticleAnimation();
             Destroy(collision.gameObject);
             GameManager.GameManagerInstance.AddScore(10);
+            //Genera power ups desde una lista de objetos 0,1,2
+            //Primero obtenemos que powerup vamos a obtener y despues la probabilidad de que salga.
+
+            //Probabilidad de que nos suelte un powerUp
+            if (Random.value > 0.8)
+            {
+                int powerUpIndex = Random.Range(0, 3);
+                //GENERAR POWERUP
+
+                GameObject powerUp = Instantiate(powerUpTypes[powerUpIndex], transform.position, Quaternion.identity);
+
+            }
         }
     }
 

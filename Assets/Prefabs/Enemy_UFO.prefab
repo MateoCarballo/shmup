@@ -216,7 +216,15 @@ MonoBehaviour:
   shootPoint: {fileID: 347499110259833517}
   bulletSpeed: 5
   selfDestructTime: 20
+  isExisting: 0
+  timeAlive: 0
+  exitSpeed: 3
+  exitDestroyDelay: 3
   hittedEfect: {fileID: 8692054763550025763}
+  powerUpTypes:
+  - {fileID: 5875909489958307084, guid: db558697309baf849af53904df72c064, type: 3}
+  - {fileID: 3037662169935842094, guid: bae843273a10a0c47a462e8456c77860, type: 3}
+  - {fileID: 4147729523401232235, guid: 7c6739c6f0daec240b4030a633ac06c2, type: 3}
 --- !u!1 &7159725510854741864
 GameObject:
   m_ObjectHideFlags: 0
