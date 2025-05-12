@@ -7,6 +7,7 @@ TagManager:
   - Escenario
   - Bullet
   - EnemySpawn
+  - GameManager
   layers:
   - Default
   - TransparentFX

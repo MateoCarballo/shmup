@@ -28,6 +28,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float spriteRotationSpeed = 200f; // Velocidad de rotación visual
 
 
+    [Header("Particle Effects")]
+    [SerializeField] private ParticleSystem hittedEfect;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -172,9 +175,18 @@ public class Enemy : MonoBehaviour
         if (collision.CompareTag("Bullet"))
         {
             Destroy(gameObject); // Destruye al enemigo
-
+            ControlParticleAnimation(); //Activa particulas del coche
             // Destruye la bala
             Destroy(collision.gameObject);
+            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().AddScore(10);
+        }
+    }
+
+    private void ControlParticleAnimation()
+    {
+        // Lógica para activar/desactivar partículas
+        {
+            if (!hittedEfect.isPlaying) hittedEfect.Play();
         }
     }
 }
