@@ -237,6 +237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1015ccfcb49b06444aa11f1d871698eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cursorTexture: {fileID: 0}
+  hotspot: {x: 0, y: 0}
 --- !u!1 &71506023
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +399,7 @@ RectTransform:
   m_GameObject: {fileID: 357662666}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.2, y: 3.2, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 20471056}
@@ -1132,6 +1134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1015ccfcb49b06444aa11f1d871698eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cursorTexture: {fileID: 2800000, guid: a9afc3b392d94364c879cf7400878736, type: 3}
+  hotspot: {x: 0, y: 0}
 --- !u!1 &1522664316
 GameObject:
   m_ObjectHideFlags: 0

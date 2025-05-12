@@ -78,6 +78,11 @@ public class GameManager : MonoBehaviour
             lifesIndex--;
             lifesSprites[lifesIndex].gameObject.SetActive(false);
         }
+        else
+        {
+            // Escena final con la puntuacion y la opcion de ir al menú principal
+            // SceneManager.LoadScene("GameOverScene");
+        }
     }
 
     public void TogglePause()
