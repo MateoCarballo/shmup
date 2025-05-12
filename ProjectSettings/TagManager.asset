@@ -9,6 +9,9 @@ TagManager:
   - EnemySpawn
   - GameManager
   - EnemyBullet
+  - PowerUpShield
+  - PowerUpBoost
+  - PowerUpMultiShoot
   layers:
   - Default
   - TransparentFX
