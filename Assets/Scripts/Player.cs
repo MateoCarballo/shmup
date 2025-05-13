@@ -203,6 +203,7 @@ public class Player : MonoBehaviour
                 case "PowerUpMultiShoot":
                     if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
                     GameManager.GameManagerInstance.PowerUpMultiShoot();
+                    
                     break;
             }
 
