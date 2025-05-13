@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2480819625503004434}
   - component: {fileID: -4947635693759840762}
   m_Layer: 0
-  m_Name: PowerUpMultiShoot
+  m_Name: PowerUpLife
   m_TagString: PowerUpMultiShoot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -7930127975755352345, guid: 65f6ed48524fed74fb2cdf3d5fbb4b0e, type: 3}
+  m_Sprite: {fileID: 1344140475206979462, guid: c2e3f50c3828709438c7918d80684705, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -103,6 +103,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
+  healthClip: {fileID: 0}
+  speedClip: {fileID: 0}
+  shieldClip: {fileID: 0}
 --- !u!61 &-2480819625503004434
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -141,7 +144,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.31, y: 0.3}
+    oldSize: {x: 0.33, y: 0.26}
     newSize: {x: 0.31, y: 0.3}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

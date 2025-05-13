@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
@@ -42,6 +43,11 @@ public class Player : MonoBehaviour
     [Header("Particle Effects")]
     [SerializeField] private ParticleSystem thrusterEffect1;
     [SerializeField] private ParticleSystem thrusterEffect2;
+
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip boostPupSFX;
+    [SerializeField] private AudioClip shielPupdSFX;
+    [SerializeField] private AudioClip shootPupSFX;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -183,6 +189,31 @@ public class Player : MonoBehaviour
 
             // Destruir después de mostrar el sprite de impacto
             Destroy(collision.gameObject, 0.1f);
+        }
+
+        // ---------- NUEVO BLOQUE PARA POWERUPS ----------
+        if (collision.CompareTag("PowerUpHealth") ||
+            collision.CompareTag("PowerUpBoost") ||
+            collision.CompareTag("PowerUpShield"))
+        {
+            AudioSource audioSource = GetComponent<AudioSource>();
+
+            switch (collision.tag)
+            {
+                case "PowerUpHealth":
+                    powerUpLife();
+                    if (boostPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
+                    break;
+                case "PowerUpBoost":
+                    if (shootPupSFX != null) audioSource.PlayOneShot(shootPupSFX);
+                    break;
+                case "PowerUpShield":
+                    powerUpShield();
+                    if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
+                    break;
+            }
+
+            Destroy(collision.gameObject);
         }
     }
 }

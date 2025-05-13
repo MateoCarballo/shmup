@@ -2,13 +2,24 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
+    [Header("Velociddad de caida")]
     // Velocidad de movimiento en vez de gravedad le damos velocidad constante
-    [SerializeField]public float moveSpeed = 2f;
+    [SerializeField] private float moveSpeed = 10f;
 
-    void Update()
+    [Header("Sonidos")]
+    [SerializeField] private AudioClip healthClip;
+    [SerializeField] private AudioClip speedClip;
+    [SerializeField] private AudioClip shieldClip;
+
+    private AudioSource audioSource;
+
+    private void Start()
     {
-        // Mueve el powerup hacia abajo
-        transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     // Detecta colisión con el jugador
@@ -19,8 +30,29 @@ public class PowerUp : MonoBehaviour
             // Aquí activaremos el efecto más adelante
             Debug.Log("PowerUp recogido!");
 
+            PlaySoundByTag();
+
             // Destruye el powerup al tocarlo
             Destroy(gameObject);
+        }
+    }
+
+    private void PlaySoundByTag()
+    {
+        switch (tag)
+        {
+            case "PowerUpHealth":
+                audioSource.PlayOneShot(healthClip);
+                break;
+            case "PowerUpBoost":
+                audioSource.PlayOneShot(speedClip);
+                break;
+            case "PowerUpShield":
+                audioSource.PlayOneShot(shieldClip);
+                break;
+            default:
+                Debug.LogWarning("PowerUp con tag desconocido: " + tag);
+                break;
         }
     }
 }

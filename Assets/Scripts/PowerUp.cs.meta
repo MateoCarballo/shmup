@@ -1,2 +1,14 @@
 fileFormatVersion: 2
 guid: a03212b168e70ce49946d4c08c92e9e7
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - healthClip: {instanceID: 0}
+  - speedClip: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
+  - shieldClip: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

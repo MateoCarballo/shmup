@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
 
     // -------------------- CONFIGURACIÓN DE BALAS --------------------
     [Header("Parámetros de Proyectil")]
-    [Tooltip("Prefab del proyectil (opcional alternativo)")]
+    [Tooltip("Prefab del proyectil")]
     public GameObject bulletPrefab;
 
     [Tooltip("Transform desde donde se dispara")]
@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
     // -------------------- EFECTOS VISUALES --------------------
     [Header("Partículas")]
     [Tooltip("Efecto al ser golpeado")]
-    [SerializeField] private ParticleSystem hittedEfect;
+    [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject[] powerUpTypes;
 
     void Start()
@@ -220,30 +220,86 @@ public class Enemy : MonoBehaviour
             bulletRb.linearVelocity = direction * bulletSpeed;
         }
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bullet"))
         {
-            Destroy(gameObject);
-            ControlParticleAnimation();
-            Destroy(collision.gameObject);
-            GameManager.GameManagerInstance.AddScore(10);
-            
-            //Probabilidad de que nos suelte un powerUp
-            if (Random.value > 0.8)
-            {
-                int powerUpIndex = Random.Range(0, powerUpTypes.Length);
+            // 1. Efecto de partículas NO FUNCIONA!
+            SpawnDeathEffect();
 
-                GameObject powerUp = Instantiate(powerUpTypes[powerUpIndex], transform.position, Quaternion.identity);
-                //Añade un efecto cuando aparece el powerUp
-                powerUp.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 1f), ForceMode2D.Impulse);
+            // 2. Desactivar enemigo (ver script GenerateEnemys.cs)
+            DeactivateEnemy();
+
+            // 3. Destruir bala
+            Destroy(collision.gameObject);
+
+            // 4. Sumar puntos
+            GameManager.GameManagerInstance.AddScore(10);
+
+            // 5. Posible powerup
+            TrySpawnPowerUp();
+        }
+    }
+
+    private void SpawnDeathEffect()
+    {
+        if (explosionPrefab != null)
+        {
+            GameObject explosion = Instantiate(
+                explosionPrefab,
+                transform.position,
+                Quaternion.identity);
+            Destroy(explosion, 2f);
+        }
+    }
+
+    private void DeactivateEnemy()
+    {
+        // Resetear estado antes de desactivar
+        ResetEnemyState();
+        gameObject.SetActive(false);
+
+        // Notificar al generador que este enemigo está disponible
+        if (GenerateEnemys.Instance != null)
+        {
+            GenerateEnemys.Instance.OnEnemyDeactivated(this);
+        }
+    }
+
+    private void ResetEnemyState()
+    {
+        isEntering = true;
+        hasTarget = true;
+        isExiting = false;
+        isExisting = false;
+        timeAlive = 0f;
+        fireTimer = 0f;
+
+        // Resetear física
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+    }
+
+    private void TrySpawnPowerUp()
+    {
+        if (powerUpTypes != null && powerUpTypes.Length > 0 && Random.value <= 1f)
+        {
+            int index = Random.Range(0, powerUpTypes.Length);
+            if (powerUpTypes[index] != null)
+            {
+                GameObject powerUp = Instantiate(powerUpTypes[index], transform.position, Quaternion.identity);
+                powerUp.GetComponent<Rigidbody2D>().linearVelocityY = -5f;
             }
         }
     }
 
+    /*
     private void ControlParticleAnimation()
     {
         if (!hittedEfect.isPlaying) hittedEfect.Play();
     }
+      */
 }
