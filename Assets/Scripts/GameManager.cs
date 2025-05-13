@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     private bool shield;
     private bool speedBoost;
     private bool life;
+    private bool multishoot = false;
     //Variables para controlar los powerups
     private int speedMultiplier;
     private int speedBoostTime;
@@ -71,13 +72,6 @@ public class GameManager : MonoBehaviour
         uiNumberScore.text = score.ToString();
     }
 
-
-    /**
-        private bool shield;
-private bool speedBoost;
-private bool life;
-     */
-
     public void PowerUpLife()
     {
         shield = true;
@@ -91,6 +85,11 @@ private bool life;
     public void PowerUpShield()
     {
         shield = true;
+    }
+
+    public void PowerUpMultiShoot()
+    {
+        multishoot = true;
     }
 
     public void QuitLife()

@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 {
 
     //public GameManager gameManager;
-    [Header ("Variables de la nave")]
+    [Header("Variables de la nave")]
     //Variables para la posicion de la nave 
     public float speed = 5f; // This is set in the inspector
     public Rigidbody2D rb; // This is set in the inspector
@@ -198,6 +198,11 @@ public class Player : MonoBehaviour
                 case "PowerUpShield":
                     if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
                     GameManager.GameManagerInstance.PowerUpShield();
+                    break;
+                // Power up para dar un disparo multiple al personaje
+                case "PowerUpMultiShoot":
+                    if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
+                    GameManager.GameManagerInstance.PowerUpMultiShoot();
                     break;
             }
 
