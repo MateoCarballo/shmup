@@ -202,10 +202,10 @@ public class Player : MonoBehaviour
             {
                 case "PowerUpHealth":
                     powerUpLife();
-                    if (boostPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
+                    if (shootPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
                     break;
                 case "PowerUpBoost":
-                    if (shootPupSFX != null) audioSource.PlayOneShot(shootPupSFX);
+                    if (boostPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
                     break;
                 case "PowerUpShield":
                     powerUpShield();
