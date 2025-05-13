@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     // Activado o no powerup
     private bool shield;
     private bool speedBoost;
-    private bool multipleShoot;
+    private bool life;
     //Variables para controlar los powerups
     private int speedMultiplier;
     private int speedBoostTime;
@@ -69,6 +69,28 @@ public class GameManager : MonoBehaviour
     {
         score += points;
         uiNumberScore.text = score.ToString();
+    }
+
+
+    /**
+        private bool shield;
+private bool speedBoost;
+private bool life;
+     */
+
+    public void PowerUpLife()
+    {
+        shield = true;
+    }
+
+    public void PowerUpSpeedBoost()
+    {
+        speedBoost = true;
+    }
+
+    public void PowerUpShield()
+    {
+        shield = true;
     }
 
     public void QuitLife()
@@ -98,9 +120,6 @@ public class GameManager : MonoBehaviour
         }
         isGamePaused = !isGamePaused;
     }
-
-
-
 
     //Metodos asociados a pausar el juego y reanudarlo
     public void PauseGame()

@@ -6,7 +6,8 @@ using UnityEngine.UIElements;
 public class Player : MonoBehaviour
 {
 
-    public GameManager gameManager;
+    //public GameManager gameManager;
+    [Header ("Variables de la nave")]
     //Variables para la posicion de la nave 
     public float speed = 5f; // This is set in the inspector
     public Rigidbody2D rb; // This is set in the inspector
@@ -15,21 +16,21 @@ public class Player : MonoBehaviour
     private Vector3 originalScale;
 
     //Variables para la interpolacion en el giro
-
+    [Header("Variables de la interpolacion de giro")]
     public float leanAmount = 0.5f;       // Cu�nto se estrecha
     public float leanSmoothness = 3f;     // Qu� tan r�pido cambia la escala
     private float currentScaleX = 1f;     // Escala actual en X
 
     //Variables para los powerUp
-
-    private Boolean shield; //Tener o no el escudo
-    private int lifes; // Numero de vidas con las que partimos
+    [Header("Power_Ups")]
+    [SerializeField] private Boolean shield; //Tener o no el escudo
+    [SerializeField] private int lifes; // Numero de vidas con las que partimos
 
 
     //Variables para lanzamiento de proyectil
     [Header("Bullet variables")]
-    public GameObject bulletPrefab; // Referencia al proycetil
-    public Transform shootPoint;    // Punto de disparo 
+    [SerializeField] public GameObject bulletPrefab; // Referencia al proycetil
+    [SerializeField] public Transform shootPoint;    // Punto de disparo 
     [SerializeField] private float bulletSpeed = 10f; // Velocidad de la bala
 
 
@@ -72,14 +73,14 @@ public class Player : MonoBehaviour
         rb.linearVelocity = newLinearVelocity;
 
 
-        // Calcular escala objetivo seg�n movimiento horizontal
+        // Calcular escala objetivo segun movimiento horizontal
         float targetScaleX = originalScale.x - Mathf.Abs(horizontalInput) * leanAmount;
 
         /*
          Esto genera una interpolacion
         Lega de la escala actual a la escala objetivo, con un paso t. 
         Donde t es una transicion suave si importar el frame-rate " Time.deltaTime * leanSmoothness" 
-        Genera una curva para llegar de un tama�o(escala) a otro y que no se aprecie un salto entre un punto y otro.
+        Genera una curva para llegar de un tamanho(escala) a otro y que no se aprecie un salto entre un punto y otro.
          */
 
         float currentXScale = Mathf.Lerp(transform.localScale.x, targetScaleX, Time.deltaTime * leanSmoothness);
@@ -99,6 +100,8 @@ public class Player : MonoBehaviour
 
     }
 
+
+    //Mi idea aqui era que salieran particulas simulando un reactor pero quedaba bastante mal y las desactive en el editor
     private void ControlParticleAnimation()
     {
         // Lógica para activar/desactivar partículas
@@ -113,6 +116,7 @@ public class Player : MonoBehaviour
             if (thrusterEffect2.isPlaying) thrusterEffect2.Stop();
         }
     }
+    //Esto es lo que saca las imagenes para indicar el movimiento con las imagenes asociadas a las teclas
     private void UpdateThrusters()
     {
         // Control horizontal (A/D)
@@ -129,6 +133,8 @@ public class Player : MonoBehaviour
 
     public void shoot()
     {
+        ///Aqui podriamos hacer que tire rafagas con un powerup de disparomultiple
+
         // Instanciar un proyectil en el punto de disparo
         GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
         //Sonido asociado a disparar
@@ -136,28 +142,6 @@ public class Player : MonoBehaviour
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.linearVelocity = Vector2.up * bulletSpeed;
 
-    }
-
-    // La idea es que cuando choquemos con un objeto (Ataque enemigo, asteroide) nos reste la vida mediante este metodo
-    public void lessLife()
-    {
-        lifes--;
-    }
-
-
-    // La idea es que cuando choquemos con un powerUp nos aumente la vida en 1
-    public void powerUpLife()
-    {
-        lifes++;
-    }
-
-    //Si no tenemos escudo y chocamos contra un escudo hacemos que nos cambie el booleano escudo a true
-    public void powerUpShield()
-    {
-        if (!shield)
-        {
-            shield = true;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -191,7 +175,7 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject, 0.1f);
         }
 
-        // ---------- NUEVO BLOQUE PARA POWERUPS ----------
+        // ---------- POWERUPS ----------
         if (collision.CompareTag("PowerUpHealth") ||
             collision.CompareTag("PowerUpBoost") ||
             collision.CompareTag("PowerUpShield"))
@@ -200,16 +184,20 @@ public class Player : MonoBehaviour
 
             switch (collision.tag)
             {
+                //Power up para aumentar en uno las vidas del jugador
                 case "PowerUpHealth":
-                    powerUpLife();
                     if (shootPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
+                    GameManager.GameManagerInstance.PowerUpLife();
                     break;
+                //Power up para dar mayor velocidad al player
                 case "PowerUpBoost":
                     if (boostPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
+                    GameManager.GameManagerInstance.PowerUpSpeedBoost();
                     break;
+                // Power up para dar un escudo al personaje
                 case "PowerUpShield":
-                    powerUpShield();
                     if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
+                    GameManager.GameManagerInstance.PowerUpShield();
                     break;
             }
 
