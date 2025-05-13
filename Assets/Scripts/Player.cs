@@ -198,6 +198,7 @@ public class Player : MonoBehaviour
                 case "PowerUpShield":
                     if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
                     GameManager.GameManagerInstance.PowerUpShield();
+                    GetComponentInChildren<SpriteRenderer>().enabled = true;
                     break;
                 // Power up para dar un disparo multiple al personaje
                 case "PowerUpMultiShoot":

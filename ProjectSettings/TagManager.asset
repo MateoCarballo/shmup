@@ -12,6 +12,7 @@ TagManager:
   - PowerUpShield
   - PowerUpBoost
   - PowerUpMultiShoot
+  - Shield
   layers:
   - Default
   - TransparentFX
