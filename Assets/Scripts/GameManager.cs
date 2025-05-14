@@ -44,6 +44,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SpriteRenderer[] lifesSprites;
     [SerializeField] private SpriteRenderer[] powerUpsSprites;
    
+
+    public int getScore()
+    {
+        return score;
+    }
+
     private void Start()
     {
         //Metodo para inicializar las vidas
