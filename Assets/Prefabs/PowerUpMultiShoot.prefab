@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6375049501371255081}
   - component: {fileID: 9016962604881532618}
+  - component: {fileID: 1591234460151261255}
   - component: {fileID: 421413271006294576}
   - component: {fileID: 5314386849829074650}
   m_Layer: 0
@@ -28,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 1286586461020620825}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.999}
-  m_LocalScale: {x: 125, y: 125, z: 108}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -89,6 +90,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1591234460151261255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286586461020620825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03212b168e70ce49946d4c08c92e9e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 7
+  healthClip: {fileID: 8300000, guid: e54be13c8a2a2054caec7839e3f68442, type: 3}
+  speedClip: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
+  shieldClip: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
+  multiShootClip: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
 --- !u!50 &421413271006294576
 Rigidbody2D:
   serializedVersion: 5

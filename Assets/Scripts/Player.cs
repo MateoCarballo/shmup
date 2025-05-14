@@ -1,214 +1,233 @@
-using System;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
-
-    //public GameManager gameManager;
     [Header("Variables de la nave")]
-    //Variables para la posicion de la nave 
-    public float speed = 5f; // This is set in the inspector
-    public Rigidbody2D rb; // This is set in the inspector
+    public float speed = 5f;
+    public Rigidbody2D rb;
     private float verticalInput, horizontalInput = 0f;
     private Vector2 startPos = new Vector2(0, -4);
     private Vector3 originalScale;
 
-    //Variables para la interpolacion en el giro
     [Header("Variables de la interpolacion de giro")]
-    public float leanAmount = 0.5f;       // Cu�nto se estrecha
-    public float leanSmoothness = 3f;     // Qu� tan r�pido cambia la escala
-    private float currentScaleX = 1f;     // Escala actual en X
+    public float leanAmount = 0.5f;
+    public float leanSmoothness = 3f;
 
-    //Variables para los powerUp
-    [Header("Power_Ups")]
-    [SerializeField] private Boolean shield; //Tener o no el escudo
-    [SerializeField] private int lifes; // Numero de vidas con las que partimos
-
-
-    //Variables para lanzamiento de proyectil
     [Header("Bullet variables")]
-    [SerializeField] public GameObject bulletPrefab; // Referencia al proycetil
-    [SerializeField] public Transform shootPoint;    // Punto de disparo 
-    [SerializeField] private float bulletSpeed = 10f; // Velocidad de la bala
+    [SerializeField] public GameObject bulletPrefab;
+    [SerializeField] public Transform shootPoint;
+    [SerializeField] private float bulletSpeed = 10f;
+    [SerializeField] private float fireRate = 0.2f;
+    private float nextFireTime = 0f;
 
+    [Header("Power Up Settings")]
+    [SerializeField] private bool hasShield = false;
+    [SerializeField] private float speedBoostMultiplier = 1.5f;
+    [SerializeField] private float speedBoostDuration = 5f;
+    private float speedBoostEndTime = 0f;
+    private bool isSpeedBoosted = false;
 
-    //Activacion de imagenes que simulan propulsion
     [Header("Thrusters")]
-    [SerializeField] private GameObject thrusterL;              // Tecla A (izquierda)
-    [SerializeField] private GameObject thrusterD;              // Tecla D (derecha)
-    [SerializeField] private GameObject thrusterBackward;       // Tecla W (propulsión frontal)
-    [SerializeField] private GameObject thrusterForward;        // Tecla S (propulsión trasera)
+    [SerializeField] private GameObject thrusterL;
+    [SerializeField] private GameObject thrusterD;
+    [SerializeField] private GameObject thrusterBackward;
+    [SerializeField] private GameObject thrusterForward;
 
     [Header("Particle Effects")]
     [SerializeField] private ParticleSystem thrusterEffect1;
     [SerializeField] private ParticleSystem thrusterEffect2;
+    [SerializeField] private GameObject shieldVisual;
 
     [Header("Sound Effects")]
-    [SerializeField] private AudioClip boostPupSFX;
-    [SerializeField] private AudioClip shielPupdSFX;
-    [SerializeField] private AudioClip shootPupSFX;
+    [SerializeField] private AudioClip powerUpBoostSFX;
+    [SerializeField] private AudioClip powerUpShieldSFX;
+    [SerializeField] private AudioClip powerUpMultiShootSFX;
+    [SerializeField] private AudioClip powerUpLifeSFX;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("MultiShoot")]
+    [SerializeField] private bool isMultiShooting = false;
+    [SerializeField] private float multiShootDuration = 3f;
+    private float multiShootEndTime = 0f;
+    [SerializeField] private float multiShootAngle = 15f; // �ngulo de dispersi�n
+    [SerializeField] private float multiShootFireRate = 0.1f; // Fuego m�s r�pido opcional
+
+    [SerializeField] private AudioClip shootSFX;
+    private AudioSource audioSource;
+
     void Start()
     {
         transform.position = startPos;
-        lifes = 3;
-        shield = false;
         originalScale = transform.localScale;
+        audioSource = GetComponent<AudioSource>();
+        shieldVisual.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        /*
-         * Esta parte es la que te mueve "wasd"
-         */
+        HandleInput();
+        HandleLeanAnimation();
+        HandleShooting();
+        HandlePowerUpTimers();
+    }
+
+    private void HandleInput()
+    {
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
         UpdateThrusters();
-        //ControlParticleAnimation();
-        Vector2 newLinearVelocity = new Vector2(horizontalInput * speed, verticalInput * speed);
-        rb.linearVelocity = newLinearVelocity;
 
-
-        // Calcular escala objetivo segun movimiento horizontal
-        float targetScaleX = originalScale.x - Mathf.Abs(horizontalInput) * leanAmount;
-
-        /*
-         Esto genera una interpolacion
-        Lega de la escala actual a la escala objetivo, con un paso t. 
-        Donde t es una transicion suave si importar el frame-rate " Time.deltaTime * leanSmoothness" 
-        Genera una curva para llegar de un tamanho(escala) a otro y que no se aprecie un salto entre un punto y otro.
-         */
-
-        float currentXScale = Mathf.Lerp(transform.localScale.x, targetScaleX, Time.deltaTime * leanSmoothness);
-        transform.localScale = new Vector3(currentXScale, originalScale.y, originalScale.z);
-
-        /*
-         Una vez definido como queremos que se "encoja" la nave pasamos este nuevo valor de "X" al parametro localScale. 
-        De modo que dejamos la escala y,z como est�. 
-        Y escalamos por un % el valor en X
-        */
-        transform.localScale = new Vector3(originalScale.x, 1.5f, 1f);
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            shoot();
-        }
-
+        float currentSpeed = isSpeedBoosted ? speed * speedBoostMultiplier : speed;
+        rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, verticalInput * currentSpeed);
     }
 
-
-    //Mi idea aqui era que salieran particulas simulando un reactor pero quedaba bastante mal y las desactive en el editor
-    private void ControlParticleAnimation()
+    private void HandleLeanAnimation()
     {
-        // Lógica para activar/desactivar partículas
-        if (verticalInput > 0)
+        float targetScaleX = originalScale.x - Mathf.Abs(horizontalInput) * leanAmount;
+        float currentXScale = Mathf.Lerp(transform.localScale.x, targetScaleX, Time.deltaTime * leanSmoothness);
+        transform.localScale = new Vector3(currentXScale, originalScale.y, originalScale.z);
+    }
+
+    private void HandleShooting()
+    {
+        if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
         {
-            if (!thrusterEffect1.isPlaying) thrusterEffect1.Play();
-            if (!thrusterEffect2.isPlaying) thrusterEffect2.Play();
+            Shoot();
+            nextFireTime = Time.time + fireRate;
+        }
+    }
+
+    private void HandlePowerUpTimers()
+    {
+        if (isSpeedBoosted && Time.time >= speedBoostEndTime)
+        {
+            isSpeedBoosted = false;
+        }
+
+        if (isMultiShooting && Time.time >= multiShootEndTime)
+        {
+            isMultiShooting = false;
+        }
+    }
+
+    public void Shoot()
+    {
+        if (isMultiShooting)
+        {
+            // Opci�n A: Disparo triple tipo abanico
+            float[] angles = { -multiShootAngle, 0, multiShootAngle };
+
+            foreach (float angle in angles)
+            {
+                Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, rotation);
+                Vector2 direction = rotation * Vector2.up;
+                bullet.GetComponent<Rigidbody2D>().linearVelocity = direction * bulletSpeed;
+            }
         }
         else
         {
-            if (thrusterEffect1.isPlaying) thrusterEffect1.Stop();
-            if (thrusterEffect2.isPlaying) thrusterEffect2.Stop();
+            // Disparo normal
+            GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
+            bullet.GetComponent<Rigidbody2D>().linearVelocity = Vector2.up * bulletSpeed;
         }
+
+        if (shootSFX != null) audioSource.PlayOneShot(shootSFX);
     }
-    //Esto es lo que saca las imagenes para indicar el movimiento con las imagenes asociadas a las teclas
+
     private void UpdateThrusters()
     {
-        // Control horizontal (A/D)
-        thrusterL.SetActive(horizontalInput < 0);  // Activa L con tecla A
-        thrusterD.SetActive(horizontalInput > 0);  // Activa D con tecla D
-
-        // Control vertical (W/S)
-        thrusterBackward.SetActive(verticalInput > 0); // Activa backward con W
-        thrusterForward.SetActive(verticalInput < 0);  // Activa forward con S
-    }
-
-
-    //Metodo para disparar el proyectil
-
-    public void shoot()
-    {
-        ///Aqui podriamos hacer que tire rafagas con un powerup de disparomultiple
-
-        // Instanciar un proyectil en el punto de disparo
-        GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
-        //Sonido asociado a disparar
-        GetComponent<AudioSource>().Play();
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.linearVelocity = Vector2.up * bulletSpeed;
-
+        thrusterL.SetActive(horizontalInput < 0);
+        thrusterD.SetActive(horizontalInput > 0);
+        thrusterBackward.SetActive(verticalInput > 0);
+        thrusterForward.SetActive(verticalInput < 0);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("EnemyBullet"))
         {
-            // Obtener los SpriteRenderers hijos (hay varias formas; aquí es directa)
-            Transform bulletTransform = collision.transform;
+            HandleBulletCollision(collision);
 
-            SpriteRenderer[] sprites = bulletTransform.GetComponentsInChildren<SpriteRenderer>(true); // Incluye inactivos
-
-            if (sprites.Length >= 2)
+            if (!hasShield)
             {
-                sprites[0].gameObject.SetActive(false); // Oculta sprite normal
-                sprites[1].gameObject.SetActive(true);  // Muestra sprite de impacto
+                GameManager.GameManagerInstance.QuitLife();
             }
-
-            // Parar el movimiento
-            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            else
             {
-                rb.linearVelocity = Vector2.zero;
-                rb.angularVelocity = 0f;
-                rb.isKinematic = true;
+                hasShield = false;
+                shieldVisual.SetActive(false);
             }
+        }
+        else if (collision.CompareTag("PowerUpLife"))
+        {
+            GameManager.GameManagerInstance.AddLife();
+            PlayPowerUpSound(powerUpLifeSFX);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("PowerUpBoost"))
+        {
+            ActivateSpeedBoost();
+            PlayPowerUpSound(powerUpBoostSFX);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("PowerUpShield"))
+        {
+            ActivateShield();
+            PlayPowerUpSound(powerUpShieldSFX);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("PowerUpMultiShoot"))
+        {
+            ActivateMultiShoot();
+            PlayPowerUpSound(powerUpMultiShootSFX);
+            Destroy(collision.gameObject);
+        }
+    }
 
-            // Quitar vida
-            GameManager.GameManagerInstance.QuitLife();
-
-            // Destruir después de mostrar el sprite de impacto
-            Destroy(collision.gameObject, 0.1f);
+    private void HandleBulletCollision(Collider2D bulletCollider)
+    {
+        var sprites = bulletCollider.GetComponentsInChildren<SpriteRenderer>(true);
+        if (sprites.Length >= 2)
+        {
+            sprites[0].gameObject.SetActive(false);
+            sprites[1].gameObject.SetActive(true);
         }
 
-        // ---------- POWERUPS ----------
-        if (collision.CompareTag("PowerUpHealth") ||
-            collision.CompareTag("PowerUpBoost") ||
-            collision.CompareTag("PowerUpShield"))
+        var rb = bulletCollider.GetComponent<Rigidbody2D>();
+        if (rb != null)
         {
-            AudioSource audioSource = GetComponent<AudioSource>();
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
 
-            switch (collision.tag)
-            {
-                //Power up para aumentar en uno las vidas del jugador
-                case "PowerUpHealth":
-                    if (shootPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
-                    GameManager.GameManagerInstance.PowerUpLife();
-                    break;
-                //Power up para dar mayor velocidad al player
-                case "PowerUpBoost":
-                    if (boostPupSFX != null) audioSource.PlayOneShot(boostPupSFX);
-                    GameManager.GameManagerInstance.PowerUpSpeedBoost();
-                    break;
-                // Power up para dar un escudo al personaje
-                case "PowerUpShield":
-                    if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
-                    GameManager.GameManagerInstance.PowerUpShield();
-                    GetComponentInChildren<SpriteRenderer>().enabled = true;
-                    break;
-                // Power up para dar un disparo multiple al personaje
-                case "PowerUpMultiShoot":
-                    if (shielPupdSFX != null) audioSource.PlayOneShot(shielPupdSFX);
-                    GameManager.GameManagerInstance.PowerUpMultiShoot();
-                    
-                    break;
-            }
+        Destroy(bulletCollider.gameObject, 0.1f);
+    }
 
-            Destroy(collision.gameObject);
+    private void ActivateSpeedBoost()
+    {
+        isSpeedBoosted = true;
+        speedBoostEndTime = Time.time + speedBoostDuration;
+    }
+
+    private void ActivateShield()
+    {
+        hasShield = true;
+        shieldVisual.SetActive(true);
+    }
+
+    private void ActivateMultiShoot()
+    {
+        isMultiShooting = true;
+        multiShootEndTime = Time.time + multiShootDuration;
+    }
+
+    private void PlayPowerUpSound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clip);
         }
     }
 }

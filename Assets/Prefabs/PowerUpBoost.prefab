@@ -30,8 +30,8 @@ Transform:
   m_GameObject: {fileID: 5875909489958307084}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.0366874, y: 2.926991, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -104,9 +104,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  healthClip: {fileID: 0}
+  healthClip: {fileID: 8300000, guid: e54be13c8a2a2054caec7839e3f68442, type: 3}
   speedClip: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
-  shieldClip: {fileID: 0}
+  shieldClip: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
+  multiShootClip: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
 --- !u!61 &-7374033851789731274
 BoxCollider2D:
   m_ObjectHideFlags: 0

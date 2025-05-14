@@ -10,6 +10,7 @@ public class PowerUp : MonoBehaviour
     [SerializeField] private AudioClip healthClip;
     [SerializeField] private AudioClip speedClip;
     [SerializeField] private AudioClip shieldClip;
+    [SerializeField] private AudioClip multiShootClip;
 
     private AudioSource audioSource;
 
@@ -41,7 +42,7 @@ public class PowerUp : MonoBehaviour
     {
         switch (tag)
         {
-            case "PowerUpHealth":
+            case "PowerUpLife":
                 audioSource.PlayOneShot(healthClip);
                 break;
             case "PowerUpBoost":
@@ -49,6 +50,9 @@ public class PowerUp : MonoBehaviour
                 break;
             case "PowerUpShield":
                 audioSource.PlayOneShot(shieldClip);
+                break;
+            case "PowerUpMultiShoot":
+                audioSource.PlayOneShot(multiShootClip);
                 break;
             default:
                 Debug.LogWarning("PowerUp con tag desconocido: " + tag);

@@ -12,7 +12,8 @@ TagManager:
   - PowerUpShield
   - PowerUpBoost
   - PowerUpMultiShoot
-  - Shield
+  - Undefined
+  - PowerUpLife
   layers:
   - Default
   - TransparentFX
@@ -55,6 +56,15 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Enemys
+    uniqueID: 485068633
+    locked: 0
+  - name: Player
+    uniqueID: 3528013889
+    locked: 0
+  - name: UI
+    uniqueID: 1534835789
     locked: 0
   m_RenderingLayers:
   - Default

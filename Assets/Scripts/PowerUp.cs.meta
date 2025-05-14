@@ -5,8 +5,9 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - healthClip: {instanceID: 0}
-  - speedClip: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
-  - shieldClip: {instanceID: 0}
+  - speedClip: {instanceID: 0}
+  - shieldClip: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
+  - multiShootClip: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

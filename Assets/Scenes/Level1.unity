@@ -147,7 +147,7 @@ RectTransform:
   m_GameObject: {fileID: 20488132}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 445683425}
@@ -155,7 +155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 50}
+  m_AnchoredPosition: {x: 0, y: 150}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &20488134
@@ -1633,7 +1633,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000d775b86f8b8a175c
+  m_ApplyToSortingLayers: 00000000d775b86f8b8a175c598fe91c413849d24dbc7b5b
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -2611,7 +2611,7 @@ RectTransform:
   m_GameObject: {fileID: 866075492}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: -1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1697610377}
@@ -3319,6 +3319,7 @@ MonoBehaviour:
   uiCanvas: {fileID: 1291375638}
   uiNumberScore: {fileID: 1344487844}
   score: 0
+  maxLives: 3
   lifesSprites:
   - {fileID: 291550816}
   - {fileID: 1388367880}
@@ -3565,8 +3566,8 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1534835789
+  m_SortingOrder: 10
   m_TargetDisplay: 0
 --- !u!224 &1116517547
 RectTransform:
@@ -4125,7 +4126,7 @@ RectTransform:
   m_GameObject: {fileID: 1362706767}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 554434043}
@@ -4133,7 +4134,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: -150}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1362706769
@@ -4444,6 +4445,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1396214697 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7352842924410061925, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+  m_PrefabInstance: {fileID: 912380884}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1686782886
 GameObject:
   m_ObjectHideFlags: 0
@@ -4472,7 +4478,7 @@ RectTransform:
   m_GameObject: {fileID: 1686782886}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1124396782}
@@ -4691,14 +4697,14 @@ RectTransform:
   m_GameObject: {fileID: 1697610376}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 866075493}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 295}
   m_SizeDelta: {x: 245.9453, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1697610378
@@ -4721,7 +4727,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Men\xFA Pausa"
+  m_text: Pause Menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bbb9b300b8cbd534b9674c2c95309ef6, type: 2}
   m_sharedMaterial: {fileID: -1585094512226100125, guid: bbb9b300b8cbd534b9674c2c95309ef6, type: 2}
@@ -4826,20 +4832,29 @@ MonoBehaviour:
   rb: {fileID: 1796808109}
   leanAmount: 0.25
   leanSmoothness: 6
-  shield: 0
-  lifes: 0
   bulletPrefab: {fileID: 6110670076094642290, guid: 0b0af19d2577dac4a89e900a595182ed, type: 3}
   shootPoint: {fileID: 589701800}
   bulletSpeed: 10
+  fireRate: 0.2
+  hasShield: 0
+  speedBoostMultiplier: 1.5
+  speedBoostDuration: 5
   thrusterL: {fileID: 521985798}
   thrusterD: {fileID: 1860011504}
   thrusterBackward: {fileID: 896231659}
   thrusterForward: {fileID: 68073418}
   thrusterEffect1: {fileID: 22115875}
   thrusterEffect2: {fileID: 1041568171}
-  boostPupSFX: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
-  shielPupdSFX: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
-  shootPupSFX: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
+  shieldVisual: {fileID: 1396214697}
+  powerUpBoostSFX: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
+  powerUpShieldSFX: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
+  powerUpMultiShootSFX: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
+  powerUpLifeSFX: {fileID: 8300000, guid: e54be13c8a2a2054caec7839e3f68442, type: 3}
+  isMultiShooting: 0
+  multiShootDuration: 3
+  multiShootAngle: 15
+  multiShootFireRate: 0.1
+  shootSFX: {fileID: 8300000, guid: 1399c4dfafbcc7048b72122e7a9d8b18, type: 3}
 --- !u!1 &1810080087
 GameObject:
   m_ObjectHideFlags: 0

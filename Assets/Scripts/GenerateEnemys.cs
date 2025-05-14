@@ -10,7 +10,6 @@ public class GenerateEnemys : MonoBehaviour
     public Transform targetPosition;
 
     private List<GameObject> enemyPool = new List<GameObject>();
-    private int currentActiveIndex = 0;
     private float spawnDelay = 8f; // Tiempo entre aparición de enemigos
     private float lastSpawnTime;
 
@@ -76,7 +75,10 @@ public class GenerateEnemys : MonoBehaviour
 
     private void ActivateEnemy(GameObject enemy)
     {
-        enemy.transform.position = spawnPoint.position;
+        Vector3 spawnPos = spawnPoint.position;
+        spawnPos.z = 0f; // o -1f si es necesario
+        enemy.transform.position = spawnPos;
+
         enemy.GetComponent<Enemy>().SetTarget(targetPosition.position);
         enemy.SetActive(true);
     }

@@ -224,7 +224,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.CompareTag("Bullet"))
         {
-            // 1. Efecto de partículas NO FUNCIONA!
+            // 1. Efecto de partículas
             SpawnDeathEffect();
 
             // 2. Desactivar enemigo (ver script GenerateEnemys.cs)
@@ -288,18 +288,16 @@ public class Enemy : MonoBehaviour
         if (powerUpTypes != null && powerUpTypes.Length > 0 && Random.value <= 1f)
         {
             int index = Random.Range(0, powerUpTypes.Length);
+            
             if (powerUpTypes[index] != null)
             {
                 GameObject powerUp = Instantiate(powerUpTypes[index], transform.position, Quaternion.identity);
-                powerUp.GetComponent<Rigidbody2D>().linearVelocityY = -5f;
+                Rigidbody2D rbPowerUp = powerUp.GetComponent<Rigidbody2D>();
+                if (rbPowerUp != null)
+                {
+                    rbPowerUp.linearVelocity = new Vector2(0,-5f);
+                }
             }
         }
     }
-
-    /*
-    private void ControlParticleAnimation()
-    {
-        if (!hittedEfect.isPlaying) hittedEfect.Play();
-    }
-      */
 }

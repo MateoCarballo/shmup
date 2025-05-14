@@ -34,8 +34,6 @@ public class GameManager : MonoBehaviour
      */
     public Player player;
     public Enemy ufo;
-    private Boolean isSpawning = false;
-
 
     //Canvas del ui con las variables asociadas con las vidas, powerups y puntuacion
     public Canvas uiCanvas;
@@ -43,6 +41,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI uiNumberScore;
     [SerializeField] private int score = 0;
     // Numero de vidas y lista con los sprites de la UI
+    [SerializeField] private int maxLives = 3;
+    private int currentLives;
     private int lifesIndex = 2;
     [SerializeField] private SpriteRenderer[] lifesSprites;
     // Activado o no powerup
@@ -55,6 +55,11 @@ public class GameManager : MonoBehaviour
     private int speedBoostTime;
     private int multipleShootTime;
 
+    private void Start()
+    {
+        //Metodo para inicializar las vidas
+        InitLifes();
+    }
 
     // Update is called once per frame
     void Update()
@@ -66,30 +71,35 @@ public class GameManager : MonoBehaviour
 
     }
 
+    private void InitLifes()
+    {
+        currentLives = maxLives;
+        // Activar todos los sprites de vida inicialmente
+        for (int i = 0; i < lifesSprites.Length; i++)
+        {
+            lifesSprites[i].gameObject.SetActive(i < currentLives);
+        }
+    }
+
     public void AddScore(int points)
     {
         score += points;
         uiNumberScore.text = score.ToString();
     }
 
-    public void PowerUpLife()
-    {
-        shield = true;
-    }
-
     public void PowerUpSpeedBoost()
     {
-        speedBoost = true;
+       //Para que el GameManager sepa que tenemos este powerUp
     }
 
     public void PowerUpShield()
     {
-        shield = true;
+        //Para que el GameManager sepa que tenemos este powerUp
     }
 
     public void PowerUpMultiShoot()
     {
-        multishoot = true;
+        //Para que el GameManager sepa que tenemos este powerUp
     }
 
     public void QuitLife()
@@ -104,6 +114,27 @@ public class GameManager : MonoBehaviour
             // Escena final con la puntuacion y la opcion de ir al menú principal
             // SceneManager.LoadScene("GameOverScene");
             SceneManager.LoadScene("MainMenu");
+        }
+    }
+
+    //Llamado desde el player cuando colisiona contra un powerUp de vida
+    public bool AddLife()
+    {
+        if (currentLives < maxLives)
+        {
+            currentLives++;
+            UpdateLifeUI();
+            return true;
+        }
+        return false;
+    }
+
+    // Actualizar UI de vidas
+    private void UpdateLifeUI()
+    {
+        for (int i = 0; i < lifesSprites.Length; i++)
+        {
+            lifesSprites[i].gameObject.SetActive(i < currentLives);
         }
     }
 
