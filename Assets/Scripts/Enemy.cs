@@ -1,9 +1,12 @@
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public class Enemy : MonoBehaviour
 {
+    // -------------------- EVENTOS --------------------
+    public event Action<Enemy> OnEnemyDestroyed;
+    public event Action<Enemy> OnEnemyDeactivated;
+
     // -------------------- REFERENCIAS --------------------
     [Header("Referencias")]
     public Rigidbody2D rb;
@@ -139,6 +142,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        // Notificar cuando el enemigo es destruido
+        OnEnemyDestroyed?.Invoke(this);
+    }
+
+    private void OnBecameInvisible()
+    {
+        // Notificar cuando el enemigo sale de pantalla
+        if (isExiting)
+        {
+            OnEnemyDeactivated?.Invoke(this);
+        }
+    }
+
     private void StartExit()
     {
         isExisting = true;
@@ -147,7 +165,7 @@ public class Enemy : MonoBehaviour
         hasTarget = false;
 
         // Elegir dirección aleatoria (izquierda o derecha)
-        float direction = Random.value > 0.5f ? 1f : -1f;
+        float direction = UnityEngine.Random.value > 0.5f ? 1f : -1f;
         rb.linearVelocity = new Vector2(direction * exitSpeed, 0);
 
         // Programar destrucción
@@ -220,6 +238,7 @@ public class Enemy : MonoBehaviour
             bulletRb.linearVelocity = direction * bulletSpeed;
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bullet"))
@@ -227,16 +246,19 @@ public class Enemy : MonoBehaviour
             // 1. Efecto de partículas
             SpawnDeathEffect();
 
-            // 2. Desactivar enemigo (ver script GenerateEnemys.cs)
+            // 2. Notificar destrucción
+            OnEnemyDestroyed?.Invoke(this);
+
+            // 3. Desactivar enemigo
             DeactivateEnemy();
 
-            // 3. Destruir bala
+            // 4. Destruir bala
             Destroy(collision.gameObject);
 
-            // 4. Sumar puntos
+            // 5. Sumar puntos
             GameManager.GameManagerInstance.AddScore(10);
 
-            // 5. Posible powerup
+            // 6. Posible powerup
             TrySpawnPowerUp();
         }
     }
@@ -260,10 +282,7 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
 
         // Notificar al generador que este enemigo está disponible
-        if (GenerateEnemys.GenerateEnemysInstance != null)
-        {
-            GenerateEnemys.GenerateEnemysInstance.OnEnemyDeactivated(this);
-        }
+        OnEnemyDeactivated?.Invoke(this);
     }
 
     private void ResetEnemyState()
@@ -285,17 +304,17 @@ public class Enemy : MonoBehaviour
 
     private void TrySpawnPowerUp()
     {
-        if (powerUpTypes != null && powerUpTypes.Length > 0 && Random.value <= 1f)
+        if (powerUpTypes != null && powerUpTypes.Length > 0 && UnityEngine.Random.value <= 1f) // 30% de probabilidad en pruebas 100%
         {
-            int index = Random.Range(0, powerUpTypes.Length);
-            
+            int index = UnityEngine.Random.Range(0, powerUpTypes.Length);
+
             if (powerUpTypes[index] != null)
             {
-                GameObject powerUp = Instantiate(powerUpTypes[index], transform.position, Quaternion.identity);
+                GameObject powerUp = Instantiate(powerUpTypes[0], transform.position, Quaternion.identity);
                 Rigidbody2D rbPowerUp = powerUp.GetComponent<Rigidbody2D>();
                 if (rbPowerUp != null)
                 {
-                    rbPowerUp.linearVelocity = new Vector2(0,-5f);
+                    rbPowerUp.linearVelocity = new Vector2(0, -5f);
                 }
             }
         }

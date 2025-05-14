@@ -55,12 +55,21 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip shootSFX;
     private AudioSource audioSource;
 
+    private GameObject spriteDefault;
+    private GameObject spritePowerUpBoost;
+
+
     void Start()
     {
         transform.position = startPos;
         originalScale = transform.localScale;
         audioSource = GetComponent<AudioSource>();
         shieldVisual.SetActive(false);
+
+        //Para tener el sprite default y el del boost referenciados
+        spriteDefault = GameObject.Find("Player/Sprite/SpriteDefautl");
+        spritePowerUpBoost = GameObject.Find("Player/Sprite/SpritePowerUpBoost");
+       
     }
 
     void Update()
@@ -102,6 +111,12 @@ public class Player : MonoBehaviour
         if (isSpeedBoosted && Time.time >= speedBoostEndTime)
         {
             isSpeedBoosted = false;
+
+            if (spriteDefault != null)
+                spriteDefault.SetActive(true);
+
+            if (spritePowerUpBoost != null)
+                spritePowerUpBoost.SetActive(false);
         }
 
         if (isMultiShooting && Time.time >= multiShootEndTime)
@@ -209,6 +224,12 @@ public class Player : MonoBehaviour
     {
         isSpeedBoosted = true;
         speedBoostEndTime = Time.time + speedBoostDuration;
+
+        if (spriteDefault != null)
+            spriteDefault.SetActive(false);
+
+        if (spritePowerUpBoost != null)
+            spritePowerUpBoost.SetActive(true);
     }
 
     private void ActivateShield()
