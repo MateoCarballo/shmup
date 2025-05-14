@@ -260,9 +260,9 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
 
         // Notificar al generador que este enemigo está disponible
-        if (GenerateEnemys.Instance != null)
+        if (GenerateEnemys.GenerateEnemysInstance != null)
         {
-            GenerateEnemys.Instance.OnEnemyDeactivated(this);
+            GenerateEnemys.GenerateEnemysInstance.OnEnemyDeactivated(this);
         }
     }
 

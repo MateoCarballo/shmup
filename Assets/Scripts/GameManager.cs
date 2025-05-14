@@ -71,6 +71,12 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void LoadNextLevel()
+    {
+        int nextLevelIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        SceneManager.LoadScene(nextLevelIndex);
+    }
+
     private void InitLifes()
     {
         currentLives = maxLives;

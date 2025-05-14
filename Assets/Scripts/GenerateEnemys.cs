@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GenerateEnemys : MonoBehaviour
 {
-    public static GenerateEnemys Instance { get; private set; }
+    public static GenerateEnemys GenerateEnemysInstance { get; private set; }
 
     public GameObject ufoPrefab;
     public Transform spawnPoint;
@@ -15,9 +15,9 @@ public class GenerateEnemys : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
+        if (GenerateEnemysInstance == null)
         {
-            Instance = this;
+            GenerateEnemysInstance = this;
         }
         else
         {
