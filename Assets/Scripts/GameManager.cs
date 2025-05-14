@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -45,6 +41,7 @@ public class GameManager : MonoBehaviour
     private int currentLives;
     private int lifesIndex = 2;
     [SerializeField] private SpriteRenderer[] lifesSprites;
+    [SerializeField] private SpriteRenderer[] powerUpsSprites;
     // Activado o no powerup
     private bool shield;
     private bool speedBoost;
@@ -93,9 +90,14 @@ public class GameManager : MonoBehaviour
         uiNumberScore.text = score.ToString();
     }
 
-    public void PowerUpSpeedBoost()
+    public void turnPowerUpsOn(int index)
     {
-       //Para que el GameManager sepa que tenemos este powerUp
+        powerUpsSprites[index].gameObject.SetActive(true);
+    }
+
+    public void turnPowerUpsOff(int index)
+    {
+        powerUpsSprites[index].gameObject.SetActive(false);
     }
 
     public void PowerUpShield()
@@ -140,7 +142,10 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < lifesSprites.Length; i++)
         {
-            lifesSprites[i].gameObject.SetActive(i < currentLives);
+            if (i < currentLives)
+            {
+                lifesSprites[i].gameObject.SetActive(true);
+            }
         }
     }
 

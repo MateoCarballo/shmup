@@ -111,7 +111,7 @@ public class Player : MonoBehaviour
         if (isSpeedBoosted && Time.time >= speedBoostEndTime)
         {
             isSpeedBoosted = false;
-
+            GameManager.GameManagerInstance.turnPowerUpsOff(2);
             if (spriteDefault != null)
                 spriteDefault.SetActive(true);
 
@@ -121,6 +121,7 @@ public class Player : MonoBehaviour
 
         if (isMultiShooting && Time.time >= multiShootEndTime)
         {
+            GameManager.GameManagerInstance.turnPowerUpsOff(0);
             isMultiShooting = false;
         }
     }
@@ -222,6 +223,7 @@ public class Player : MonoBehaviour
 
     private void ActivateSpeedBoost()
     {
+        GameManager.GameManagerInstance.turnPowerUpsOn(2);
         isSpeedBoosted = true;
         speedBoostEndTime = Time.time + speedBoostDuration;
 
@@ -234,12 +236,14 @@ public class Player : MonoBehaviour
 
     private void ActivateShield()
     {
+        GameManager.GameManagerInstance.turnPowerUpsOn(1);
         hasShield = true;
         shieldVisual.SetActive(true);
     }
 
     private void ActivateMultiShoot()
     {
+        GameManager.GameManagerInstance.turnPowerUpsOn(0);
         isMultiShooting = true;
         multiShootEndTime = Time.time + multiShootDuration;
     }
