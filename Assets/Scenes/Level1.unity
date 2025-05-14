@@ -2140,8 +2140,8 @@ MonoBehaviour:
   ufoPrefab: {fileID: 4644658022247739700, guid: dc13a166768abc4498a3e5e9b5c01652, type: 3}
   spawnPoint: {fileID: 742317595}
   targetPosition: {fileID: 647313468}
-  spawnDelay: 8
-  totalEnemiesToSpawn: 50
+  spawnDelay: 5
+  totalEnemiesToSpawn: 3
   levelEndDelay: 3
   playerShip: {fileID: 1796808113}
 --- !u!1 &749815669
