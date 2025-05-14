@@ -10,14 +10,15 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (GameManagerInstance == null)
+        //Patrón singleton
+        if (GameManagerInstance != null && GameManagerInstance != this)
         {
-            GameManagerInstance = this;
-            DontDestroyOnLoad(gameObject);
+            Destroy(gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            GameManagerInstance = this;
+            DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -42,16 +43,7 @@ public class GameManager : MonoBehaviour
     private int lifesIndex = 2;
     [SerializeField] private SpriteRenderer[] lifesSprites;
     [SerializeField] private SpriteRenderer[] powerUpsSprites;
-    // Activado o no powerup
-    private bool shield;
-    private bool speedBoost;
-    private bool life;
-    private bool multishoot = false;
-    //Variables para controlar los powerups
-    private int speedMultiplier;
-    private int speedBoostTime;
-    private int multipleShootTime;
-
+   
     private void Start()
     {
         //Metodo para inicializar las vidas
@@ -100,15 +92,6 @@ public class GameManager : MonoBehaviour
         powerUpsSprites[index].gameObject.SetActive(false);
     }
 
-    public void PowerUpShield()
-    {
-        //Para que el GameManager sepa que tenemos este powerUp
-    }
-
-    public void PowerUpMultiShoot()
-    {
-        //Para que el GameManager sepa que tenemos este powerUp
-    }
 
     public void QuitLife()
     {

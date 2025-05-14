@@ -2140,6 +2140,10 @@ MonoBehaviour:
   ufoPrefab: {fileID: 4644658022247739700, guid: dc13a166768abc4498a3e5e9b5c01652, type: 3}
   spawnPoint: {fileID: 742317595}
   targetPosition: {fileID: 647313468}
+  spawnDelay: 8
+  totalEnemiesToSpawn: 10
+  levelEndDelay: 3
+  playerShip: {fileID: 0}
 --- !u!1 &749815669
 GameObject:
   m_ObjectHideFlags: 0
@@ -3324,6 +3328,7 @@ MonoBehaviour:
   - {fileID: 291550816}
   - {fileID: 1388367880}
   - {fileID: 1233272685}
+  powerUpsSprites: []
 --- !u!4 &1053054971
 Transform:
   m_ObjectHideFlags: 0
@@ -4019,7 +4024,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00
+  m_text: 99
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bbb9b300b8cbd534b9674c2c95309ef6, type: 2}
   m_sharedMaterial: {fileID: -1585094512226100125, guid: bbb9b300b8cbd534b9674c2c95309ef6, type: 2}
