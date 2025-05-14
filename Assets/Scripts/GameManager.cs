@@ -20,6 +20,11 @@ public class GameManager : MonoBehaviour
             GameManagerInstance = this;
             DontDestroyOnLoad(gameObject);
         }
+        //Inicializa el numer de vidas a 3
+        maxLives = 3;
+        currentLives = maxLives;
+        score = 0;
+
     }
 
     public Canvas pauseCanvas;
@@ -36,24 +41,19 @@ public class GameManager : MonoBehaviour
     public Canvas uiCanvas;
     // Puntuacion
     [SerializeField] private TextMeshProUGUI uiNumberScore;
-    [SerializeField] private int score = 0;
+    [SerializeField] private int score;
     // Numero de vidas y lista con los sprites de la UI
-    [SerializeField] private int maxLives = 3;
+    [SerializeField] private int maxLives;
     private int currentLives;
-    private int lifesIndex = 2;
-    [SerializeField] private SpriteRenderer[] lifesSprites;
-    [SerializeField] private SpriteRenderer[] powerUpsSprites;
-   
 
     public int getScore()
     {
         return score;
     }
 
-    private void Start()
+    public int getCurrentLifes()
     {
-        //Metodo para inicializar las vidas
-        InitLifes();
+        return currentLives;
     }
 
     // Update is called once per frame
@@ -72,15 +72,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(nextLevelIndex);
     }
 
-    private void InitLifes()
-    {
-        currentLives = maxLives;
-        // Activar todos los sprites de vida inicialmente
-        for (int i = 0; i < lifesSprites.Length; i++)
-        {
-            lifesSprites[i].gameObject.SetActive(i < currentLives);
-        }
-    }
+    
 
     public void AddScore(int points)
     {
@@ -88,23 +80,11 @@ public class GameManager : MonoBehaviour
         uiNumberScore.text = score.ToString();
     }
 
-    public void turnPowerUpsOn(int index)
-    {
-        powerUpsSprites[index].gameObject.SetActive(true);
-    }
-
-    public void turnPowerUpsOff(int index)
-    {
-        powerUpsSprites[index].gameObject.SetActive(false);
-    }
-
-
     public void QuitLife()
     {
-        if (lifesIndex >= 0)
+        if(currentLives >= 0)
         {
-            lifesSprites[lifesIndex].gameObject.SetActive(false);
-            lifesIndex--;
+            currentLives--;
         }
         else
         {
@@ -120,22 +100,9 @@ public class GameManager : MonoBehaviour
         if (currentLives < maxLives)
         {
             currentLives++;
-            UpdateLifeUI();
             return true;
         }
         return false;
-    }
-
-    // Actualizar UI de vidas
-    private void UpdateLifeUI()
-    {
-        for (int i = 0; i < lifesSprites.Length; i++)
-        {
-            if (i < currentLives)
-            {
-                lifesSprites[i].gameObject.SetActive(true);
-            }
-        }
     }
 
     public void TogglePause()

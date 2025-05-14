@@ -23,10 +23,10 @@ public class Player : MonoBehaviour
 
     [Header("Power Up Settings")]
     [SerializeField] private bool hasShield = false;
-    [SerializeField] private float speedBoostMultiplier = 1.5f;
+    [SerializeField] private bool isSpeedBoosted = false;
+    [SerializeField] private float speedBoostMultiplier = 3f;
     [SerializeField] private float speedBoostDuration = 5f;
     private float speedBoostEndTime = 0f;
-    private bool isSpeedBoosted = false;
 
     [Header("Thrusters")]
     [SerializeField] private GameObject thrusterL;
@@ -46,11 +46,11 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip powerUpLifeSFX;
 
     [Header("MultiShoot")]
-    [SerializeField] private bool isMultiShooting = false;
+    [SerializeField] private bool isMultiShooting;
     [SerializeField] private float multiShootDuration = 3f;
     private float multiShootEndTime = 0f;
-    [SerializeField] private float multiShootAngle = 15f; // �ngulo de dispersi�n
-    [SerializeField] private float multiShootFireRate = 0.1f; // Fuego m�s r�pido opcional
+    [SerializeField] private float multiShootAngle = 15f; // Disparo en un cono
+    [SerializeField] private float multiShootFireRate = 0.1f; // Fuego mas rapido no usado
 
     [SerializeField] private AudioClip shootSFX;
     private AudioSource audioSource;
@@ -58,6 +58,8 @@ public class Player : MonoBehaviour
     private GameObject spriteDefault;
     private GameObject spritePowerUpBoost;
 
+    [Header("UiManager")]
+    [SerializeField] private UiManager uiManager;
 
     void Start()
     {
@@ -65,6 +67,11 @@ public class Player : MonoBehaviour
         originalScale = transform.localScale;
         audioSource = GetComponent<AudioSource>();
         shieldVisual.SetActive(false);
+
+        //Poner los powerups a cero la primera vez que arrancamos
+        isMultiShooting = false;
+        hasShield = false;
+        isSpeedBoosted = false;
 
         //Para tener el sprite default y el del boost referenciados
         spriteDefault = GameObject.Find("Player/Sprite/SpriteDefautl");
@@ -77,6 +84,7 @@ public class Player : MonoBehaviour
         HandleInput();
         HandleLeanAnimation();
         HandleShooting();
+        HandleShield();
         HandlePowerUpTimers();
     }
 
@@ -85,8 +93,17 @@ public class Player : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
         UpdateThrusters();
-
-        float currentSpeed = isSpeedBoosted ? speed * speedBoostMultiplier : speed;
+        float currentSpeed;
+        if (isSpeedBoosted)
+        {
+            currentSpeed = speed * speedBoostMultiplier;
+            uiManager.turnPowerUpsOn(0);
+        }
+        else
+        {
+            currentSpeed = speed;
+            uiManager.turnPowerUpsOff(0);
+        }
         rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, verticalInput * currentSpeed);
     }
 
@@ -111,7 +128,7 @@ public class Player : MonoBehaviour
         if (isSpeedBoosted && Time.time >= speedBoostEndTime)
         {
             isSpeedBoosted = false;
-            GameManager.GameManagerInstance.turnPowerUpsOff(2);
+            uiManager.turnPowerUpsOff(2);
             if (spriteDefault != null)
                 spriteDefault.SetActive(true);
 
@@ -121,7 +138,7 @@ public class Player : MonoBehaviour
 
         if (isMultiShooting && Time.time >= multiShootEndTime)
         {
-            GameManager.GameManagerInstance.turnPowerUpsOff(0);
+            uiManager.turnPowerUpsOff(0);
             isMultiShooting = false;
         }
     }
@@ -177,7 +194,7 @@ public class Player : MonoBehaviour
         }
         else if (collision.CompareTag("PowerUpLife"))
         {
-            GameManager.GameManagerInstance.AddLife();
+            ActivePowerUpLife();
             PlayPowerUpSound(powerUpLifeSFX);
             Destroy(collision.gameObject);
         }
@@ -221,9 +238,14 @@ public class Player : MonoBehaviour
         Destroy(bulletCollider.gameObject, 0.1f);
     }
 
+    private void ActivePowerUpLife()
+    {
+        GameManager.GameManagerInstance.AddLife();
+    }
+
     private void ActivateSpeedBoost()
     {
-        GameManager.GameManagerInstance.turnPowerUpsOn(2);
+        uiManager.turnPowerUpsOn(0);
         isSpeedBoosted = true;
         speedBoostEndTime = Time.time + speedBoostDuration;
 
@@ -236,16 +258,28 @@ public class Player : MonoBehaviour
 
     private void ActivateShield()
     {
-        GameManager.GameManagerInstance.turnPowerUpsOn(1);
+        uiManager.turnPowerUpsOn(1);
         hasShield = true;
         shieldVisual.SetActive(true);
     }
 
     private void ActivateMultiShoot()
     {
-        GameManager.GameManagerInstance.turnPowerUpsOn(0);
+        uiManager.turnPowerUpsOn(2);
         isMultiShooting = true;
         multiShootEndTime = Time.time + multiShootDuration;
+    }
+
+    private void HandleShield()
+    {
+        if (hasShield)
+        {
+            shieldVisual.SetActive(true);
+        }
+        else
+        {
+            shieldVisual.SetActive(false);
+        }
     }
 
     private void PlayPowerUpSound(AudioClip clip)
