@@ -2868,10 +2868,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: R_Particle
       objectReference: {fileID: 0}
-    - target: {fileID: 2931591502698249972, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
-      propertyPath: m_SortingOrder
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 3386665831396980502, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: m_Name
       value: Player
@@ -4841,7 +4837,7 @@ MonoBehaviour:
   bulletSpeed: 10
   fireRate: 0.2
   hasShield: 0
-  speedBoostMultiplier: 1.5
+  speedBoostMultiplier: 3
   speedBoostDuration: 5
   thrusterL: {fileID: 521985798}
   thrusterD: {fileID: 1860011504}
@@ -4854,8 +4850,8 @@ MonoBehaviour:
   powerUpShieldSFX: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
   powerUpMultiShootSFX: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
   powerUpLifeSFX: {fileID: 8300000, guid: e54be13c8a2a2054caec7839e3f68442, type: 3}
-  isMultiShooting: 0
-  multiShootDuration: 3
+  isMultiShooting: 1
+  multiShootDuration: 5
   multiShootAngle: 15
   multiShootFireRate: 0.1
   shootSFX: {fileID: 8300000, guid: 1399c4dfafbcc7048b72122e7a9d8b18, type: 3}

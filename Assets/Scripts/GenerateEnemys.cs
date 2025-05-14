@@ -49,14 +49,20 @@ public class GenerateEnemys : MonoBehaviour
     void Update()
     {
         if (!levelCompleted && enemiesSpawned < totalEnemiesToSpawn && Time.time - lastSpawnTime > spawnDelay)
+
         {
             TrySpawnEnemy();
             lastSpawnTime = Time.time;
         }
 
-        // Comprobar si se completó el nivel
+        // Comprobar si se debe completar el nivel
+        // Se avanza si:
+        // 1. Todos los enemigos han sido generados y ya no quedan enemigos activos
+        // 2. Todos los enemigos han sido eliminados (han pasado o han sido destruidos)
         if (!levelCompleted && enemiesSpawned >= totalEnemiesToSpawn && enemiesActive <= 0)
         {
+            // Log: Para verificar si la condición se cumple
+            Debug.Log("Nivel completado. Avanzando al siguiente nivel.");
             StartCoroutine(CompleteLevel());
         }
     }
@@ -76,7 +82,7 @@ public class GenerateEnemys : MonoBehaviour
         enemyComponent.SetTarget(targetPosition.position);
 
         // Registrar eventos
-        enemyComponent.OnEnemyDestroyed += HandleEnemyDestroyed;
+        //enemyComponent.OnEnemyDestroyed += HandleEnemyDestroyed;
         enemyComponent.OnEnemyDeactivated += HandleEnemyDeactivated;
 
         enemy.SetActive(false);
@@ -92,6 +98,7 @@ public class GenerateEnemys : MonoBehaviour
                 ActivateEnemy(enemy);
                 enemiesSpawned++;
                 enemiesActive++;
+                Debug.Log("Enemigos generados: " + enemiesSpawned);
                 return;
             }
         }
@@ -103,6 +110,7 @@ public class GenerateEnemys : MonoBehaviour
             ActivateEnemy(enemyPool[enemyPool.Count - 1]);
             enemiesSpawned++;
             enemiesActive++;
+            Debug.Log("Enemigos generados: " + enemiesSpawned);
         }
     }
 
@@ -117,14 +125,18 @@ public class GenerateEnemys : MonoBehaviour
 
     private void HandleEnemyDestroyed(Enemy enemy)
     {
+        // Reducir los enemigos activos cuando un enemigo es destruido
         enemiesActive--;
-        enemy.OnEnemyDestroyed -= HandleEnemyDestroyed;
+        Debug.Log("Enemigos activos después de la destrucción: " + enemiesActive);
+        //enemy.OnEnemyDestroyed -= HandleEnemyDestroyed;
         enemy.OnEnemyDeactivated -= HandleEnemyDeactivated;
     }
 
     private void HandleEnemyDeactivated(Enemy enemy)
     {
+        // Reducir los enemigos activos si un enemigo es desactivado (por ejemplo, si ha salido de pantalla)
         enemiesActive--;
+        Debug.Log("Enemigos activos después de la desactivación: " + enemiesActive);
     }
 
     private IEnumerator CompleteLevel()
@@ -141,6 +153,7 @@ public class GenerateEnemys : MonoBehaviour
         yield return new WaitForSeconds(levelEndDelay);
 
         // 3. Cargar siguiente nivel
+        Debug.Log("Cargando el siguiente nivel...");
         LoadNextLevel();
     }
 

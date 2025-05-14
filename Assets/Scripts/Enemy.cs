@@ -3,92 +3,52 @@ using System;
 
 public class Enemy : MonoBehaviour
 {
-    // -------------------- EVENTOS --------------------
-    public event Action<Enemy> OnEnemyDestroyed;
     public event Action<Enemy> OnEnemyDeactivated;
 
-    // -------------------- REFERENCIAS --------------------
     [Header("Referencias")]
     public Rigidbody2D rb;
     public Player player;
 
-    // -------------------- MOVIMIENTO DE ENTRADA --------------------
     [Header("Movimiento Inicial")]
-    [Tooltip("Velocidad con la que entra a la escena")]
     public float ufoVelocity = 1.5f;
-
-    [Tooltip("Velocidad angular (si se usa para rotación física)")]
-    [SerializeField] public float ufoRotationVelocity = 125f;
-
+    public float ufoRotationVelocity = 125f;
     private Vector2 moveTarget;
     private bool hasTarget = false;
     private bool isEntering = true;
 
-    // -------------------- MOVIMIENTO INFINITO --------------------
     [Header("Movimiento Curva Infinita")]
     [SerializeField] private float infinityTime = 0f;
-
-    [Tooltip("Velocidad de avance por la curva")]
-    [SerializeField] public float infinitySpeed = 1f;
-
-    [Tooltip("Escala horizontal de la curva")]
-    [SerializeField] public float infinityWidthMultiplier = 0.1f;
-
-    [Tooltip("Escala vertical de la curva")]
-    [SerializeField] public float infinityHeightMultiplier = 0.04f;
-
-    [Tooltip("Qué tan rápido sigue al jugador en su movimiento")]
-    [SerializeField] public float followLerpSpeed = 2f;
-
+    public float infinitySpeed = 1f;
+    public float infinityWidthMultiplier = 0.1f;
+    public float infinityHeightMultiplier = 0.04f;
+    public float followLerpSpeed = 2f;
     private Vector2 centerOffset;
 
-    // -------------------- ROTACIÓN VISUAL --------------------
     [Header("Rotación Visual del Sprite")]
-    [Tooltip("Transform del sprite que rota visualmente")]
     [SerializeField] private Transform spriteTransform;
-
-    [Tooltip("Velocidad de rotación visual del sprite")]
     [SerializeField] private float spriteRotationSpeed = 200f;
 
-    // -------------------- DISPARO AL JUGADOR --------------------
     [Header("Sistema de Disparo")]
-    [Tooltip("Prefab de la bala enemiga")]
     [SerializeField] private GameObject enemyBulletPrefab;
-
-    [Tooltip("Tiempo entre cada disparo")]
     [SerializeField] private float fireInterval = 5f;
-
     private float fireTimer = 0f;
 
-    // -------------------- CONFIGURACIÓN DE BALAS --------------------
-    [Header("Parámetros de Proyectil")]
-    [Tooltip("Prefab del proyectil")]
+    [Header("Proyectiles")]
     public GameObject bulletPrefab;
-
-    [Tooltip("Transform desde donde se dispara")]
     public Transform shootPoint;
-
-    [Tooltip("Velocidad de la bala")]
     [SerializeField] private float bulletSpeed = 10f;
 
-    // -------------------- AUTODESTRUCCIÓN --------------------
     [Header("Autodestrucción")]
-    [Tooltip("Tiempo máximo de vida del enemigo")]
     [SerializeField] private float selfDestructTime = 15f;
-    [SerializeField] private bool isExisting = false;
-    [SerializeField] private float timeAlive = 0f;
+    private bool isExisting = false;
+    private float timeAlive = 0f;
 
-    // -------------------- SISTEMA DE SALIDA --------------------
-    [Header("Configuración de Salida")]
-    [Tooltip("Velocidad al salir de pantalla")]
+    [Header("Salida del Enemigo")]
     [SerializeField] private float exitSpeed = 3f;
-    [Tooltip("Tiempo antes de destruir al salir")]
     [SerializeField] private float exitDestroyDelay = 3f;
     private bool isExiting = false;
 
-    // -------------------- EFECTOS VISUALES --------------------
-    [Header("Partículas")]
-    [Tooltip("Efecto al ser golpeado")]
+    [Header("Partículas y PowerUps")]
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private GameObject[] powerUpTypes;
 
@@ -103,7 +63,6 @@ public class Enemy : MonoBehaviour
     {
         RotateSprite();
 
-        // Si está en modo salida, no procesar otros movimientos
         if (isExiting) return;
 
         if (hasTarget)
@@ -135,22 +94,14 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Mantener velocidad constante durante la salida
         if (isExiting)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.normalized.x * exitSpeed, 0);
         }
     }
 
-    private void OnDestroy()
-    {
-        // Notificar cuando el enemigo es destruido
-        OnEnemyDestroyed?.Invoke(this);
-    }
-
     private void OnBecameInvisible()
     {
-        // Notificar cuando el enemigo sale de pantalla
         if (isExiting)
         {
             OnEnemyDeactivated?.Invoke(this);
@@ -164,12 +115,10 @@ public class Enemy : MonoBehaviour
         isEntering = false;
         hasTarget = false;
 
-        // Elegir dirección aleatoria (izquierda o derecha)
         float direction = UnityEngine.Random.value > 0.5f ? 1f : -1f;
         rb.linearVelocity = new Vector2(direction * exitSpeed, 0);
 
-        // Programar destrucción
-        Destroy(gameObject, exitDestroyDelay);
+        Destroy(gameObject, exitDestroyDelay); // solo se destruye si se va volando
     }
 
     private void moveEnemyToScene()
@@ -197,11 +146,7 @@ public class Enemy : MonoBehaviour
         float y = (infinityHeightMultiplier * Mathf.Sin(t) * Mathf.Cos(t)) / denominator;
         Vector2 targetCenter = (Vector2)player.transform.position + centerOffset;
 
-        Vector2 currentCenter = Vector2.Lerp(
-            transform.position,
-            targetCenter,
-            Time.deltaTime * followLerpSpeed);
-
+        Vector2 currentCenter = Vector2.Lerp(transform.position, targetCenter, Time.deltaTime * followLerpSpeed);
         Vector2 newPosition = currentCenter + new Vector2(x, y);
         rb.MovePosition(newPosition);
     }
@@ -243,23 +188,12 @@ public class Enemy : MonoBehaviour
     {
         if (collision.CompareTag("Bullet"))
         {
-            // 1. Efecto de partículas
             SpawnDeathEffect();
-
-            // 2. Notificar destrucción
-            OnEnemyDestroyed?.Invoke(this);
-
-            // 3. Desactivar enemigo
-            DeactivateEnemy();
-
-            // 4. Destruir bala
             Destroy(collision.gameObject);
-
-            // 5. Sumar puntos
             GameManager.GameManagerInstance.AddScore(10);
-
-            // 6. Posible powerup
             TrySpawnPowerUp();
+
+            DeactivateEnemy(); // aquí solo se desactiva, no se destruye
         }
     }
 
@@ -267,21 +201,15 @@ public class Enemy : MonoBehaviour
     {
         if (explosionPrefab != null)
         {
-            GameObject explosion = Instantiate(
-                explosionPrefab,
-                transform.position,
-                Quaternion.identity);
+            GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Destroy(explosion, 2f);
         }
     }
 
     private void DeactivateEnemy()
     {
-        // Resetear estado antes de desactivar
         ResetEnemyState();
         gameObject.SetActive(false);
-
-        // Notificar al generador que este enemigo está disponible
         OnEnemyDeactivated?.Invoke(this);
     }
 
@@ -294,7 +222,6 @@ public class Enemy : MonoBehaviour
         timeAlive = 0f;
         fireTimer = 0f;
 
-        // Resetear física
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -304,13 +231,12 @@ public class Enemy : MonoBehaviour
 
     private void TrySpawnPowerUp()
     {
-        if (powerUpTypes != null && powerUpTypes.Length > 0 && UnityEngine.Random.value <= 1f) // 30% de probabilidad en pruebas 100%
+        if (powerUpTypes != null && powerUpTypes.Length > 0 && UnityEngine.Random.value <= 1f)
         {
             int index = UnityEngine.Random.Range(0, powerUpTypes.Length);
-
             if (powerUpTypes[index] != null)
             {
-                GameObject powerUp = Instantiate(powerUpTypes[0], transform.position, Quaternion.identity);
+                GameObject powerUp = Instantiate(powerUpTypes[index], transform.position, Quaternion.identity);
                 Rigidbody2D rbPowerUp = powerUp.GetComponent<Rigidbody2D>();
                 if (rbPowerUp != null)
                 {
