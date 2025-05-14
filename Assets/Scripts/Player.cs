@@ -97,12 +97,12 @@ public class Player : MonoBehaviour
         if (isSpeedBoosted)
         {
             currentSpeed = speed * speedBoostMultiplier;
-            uiManager.turnPowerUpsOn(0);
+            uiManager.turnPowerUpOnByIndex(0);
         }
         else
         {
             currentSpeed = speed;
-            uiManager.turnPowerUpsOff(0);
+            uiManager.turnPowerUpOffByIndex(0);
         }
         rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, verticalInput * currentSpeed);
     }
@@ -128,7 +128,7 @@ public class Player : MonoBehaviour
         if (isSpeedBoosted && Time.time >= speedBoostEndTime)
         {
             isSpeedBoosted = false;
-            uiManager.turnPowerUpsOff(2);
+            uiManager.turnPowerUpOffByIndex(2);
             if (spriteDefault != null)
                 spriteDefault.SetActive(true);
 
@@ -138,7 +138,7 @@ public class Player : MonoBehaviour
 
         if (isMultiShooting && Time.time >= multiShootEndTime)
         {
-            uiManager.turnPowerUpsOff(0);
+            uiManager.turnPowerUpOffByIndex(0);
             isMultiShooting = false;
         }
     }
@@ -245,7 +245,7 @@ public class Player : MonoBehaviour
 
     private void ActivateSpeedBoost()
     {
-        uiManager.turnPowerUpsOn(0);
+        uiManager.turnPowerUpOnByIndex(0);
         isSpeedBoosted = true;
         speedBoostEndTime = Time.time + speedBoostDuration;
 
@@ -258,14 +258,14 @@ public class Player : MonoBehaviour
 
     private void ActivateShield()
     {
-        uiManager.turnPowerUpsOn(1);
+        uiManager.turnPowerUpOnByIndex(1);
         hasShield = true;
         shieldVisual.SetActive(true);
     }
 
     private void ActivateMultiShoot()
     {
-        uiManager.turnPowerUpsOn(2);
+        uiManager.turnPowerUpOnByIndex(2);
         isMultiShooting = true;
         multiShootEndTime = Time.time + multiShootDuration;
     }

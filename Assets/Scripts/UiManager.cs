@@ -5,7 +5,7 @@ using UnityEngine;
 public class UiManager : MonoBehaviour
 {
     [Header("GameManager")]
-    GameManager gameManager;
+    //GameManager gameManager;
     [Header("Referencias para la puntuacion")]
     [SerializeField] private TextMeshProUGUI textScore;
     [Header("Objetos visibles en la UI")]
@@ -15,43 +15,33 @@ public class UiManager : MonoBehaviour
 
     void Start()
     {
-        RestoreUiValues();
+        UpdateScore();
+        UpdateLifes();
     }
-
-    private void Update()
+    //Actualizar la puntuacion en la UI
+    public void UpdateScore()
     {
-        //Aqui podria hacer que solo se actualicen las vidas ?
-        RestoreLifesInUI();
-    }
-
-    private void RestoreUiValues()
-    {
-        //Recargar la puntuacion de la ui
         textScore.text = GameManager.GameManagerInstance.getScore().ToString();
-
-        //Recargar el numero de vidas 
-        uiCurrenLifesSprite = GameManager.GameManagerInstance.getCurrentLifes();
-        RestoreLifesInUI();
-        //Regargar los powerUp o no aun lo estamos decidiendo
-
     }
+    //Actualizar las vidas en la UI
 
-    private void RestoreLifesInUI()
+    public void UpdateLifes()
     {
-        // Activar los sprites del numero de vidas que tenemos realmente
+        uiCurrenLifesSprite = GameManager.GameManagerInstance.getCurrentLifes();
+
         for (int i = 0; i < lifesSprites.Length; i++)
         {
             lifesSprites[i].gameObject.SetActive(i < uiCurrenLifesSprite);
         }
     }
 
-
-    public void turnPowerUpsOn(int index)
+    //Activar simbolo de power up
+    public void turnPowerUpOnByIndex(int index)
     {
         powerUpsSprites[index].gameObject.SetActive(true);
     }
-
-    public void turnPowerUpsOff(int index)
+    //Desactivar simbolo de power up
+    public void turnPowerUpOffByIndex(int index)
     {
         powerUpsSprites[index].gameObject.SetActive(false);
     }

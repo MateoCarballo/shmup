@@ -1,12 +1,33 @@
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    //Variable estatica para el singleton
     public static GameManager GameManagerInstance { get; private set; }
 
-    //Singleton para asegurar que solo tengamos una instancia
+    //Variables para gestionar el menu de pausa del juego
+    public Canvas pauseCanvas;
+    private bool isGamePaused = false;
+
+    //Variables de estado que deben perdurar entre niveles
+    [SerializeField] private int maxLives;
+    [SerializeField] private int currentLives;
+    [SerializeField] private int score;
+
+    //Esto tendria más sentido si los podemos activar con teclas(si lo tenemos disponible)
+    [SerializeField] private bool isShieldEnabled;
+    [SerializeField] private bool isSpeedBoostEnabled;
+    [SerializeField] private bool isMultipleShootEnabled;
+
+    //Saber si esta o no activo el power-up
+    [SerializeField] private bool isShieldActive;
+    [SerializeField] private bool isSpeedBoostActive;
+    [SerializeField] private bool isMultipleShootActive;
+
+    private UiManager uiManager;
 
     private void Awake()
     {
@@ -20,31 +41,18 @@ public class GameManager : MonoBehaviour
             GameManagerInstance = this;
             DontDestroyOnLoad(gameObject);
         }
-        //Inicializa el numer de vidas a 3
+
+        //Inicializamos los valores que tendran al instanciar el objeto (Nivel1) con los valores base
         maxLives = 3;
         currentLives = maxLives;
         score = 0;
+        isShieldActive = false;
+        isSpeedBoostActive = false;
+        isMultipleShootActive = false;
 
+        //Encontramos el UiManager para poder actualizar valores frente a eventos
+        uiManager = GameObject.FindGameObjectWithTag("UiPanel").GetComponent<UiManager>();
     }
-
-    public Canvas pauseCanvas;
-    private bool isGamePaused = false;
-
-    /*
-     * Referciado al prefab del ufo y al player de la escena 
-     * para poder saber sus propiedades como vida, powerups,etc.
-     */
-    public Player player;
-    public Enemy ufo;
-
-    //Canvas del ui con las variables asociadas con las vidas, powerups y puntuacion
-    public Canvas uiCanvas;
-    // Puntuacion
-    [SerializeField] private TextMeshProUGUI uiNumberScore;
-    [SerializeField] private int score;
-    // Numero de vidas y lista con los sprites de la UI
-    [SerializeField] private int maxLives;
-    private int currentLives;
 
     public int getScore()
     {
@@ -56,12 +64,11 @@ public class GameManager : MonoBehaviour
         return currentLives;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePause(); // Metodo para gestionar el activar o desactivar la escena del menu de pausa
+            TogglePause();
         }
 
     }
@@ -72,37 +79,37 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(nextLevelIndex);
     }
 
-    
+
 
     public void AddScore(int points)
     {
         score += points;
-        uiNumberScore.text = score.ToString();
+        uiManager.UpdateScore();
     }
 
-    public void QuitLife()
-    {
-        if(currentLives >= 0)
-        {
-            currentLives--;
-        }
-        else
-        {
-            // Escena final con la puntuacion y la opcion de ir al menú principal
-            // SceneManager.LoadScene("GameOverScene");
-            SceneManager.LoadScene("MainMenu");
-        }
-    }
-
-    //Llamado desde el player cuando colisiona contra un powerUp de vida
     public bool AddLife()
     {
         if (currentLives < maxLives)
         {
             currentLives++;
+            uiManager.UpdateLifes();
             return true;
         }
         return false;
+    }
+
+    public void QuitLife()
+    {
+        if (currentLives >= 0)
+        {
+            currentLives--;
+            uiManager.UpdateLifes();
+        }
+        else if (currentLives < 0)
+        {
+            //Por ahora volvemos al menu principal pero seria mejor mandarlo a la pantalla game over
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 
     public void TogglePause()

@@ -190,9 +190,9 @@ public class Enemy : MonoBehaviour
         {
             SpawnDeathEffect();
             Destroy(collision.gameObject);
+            //Registramos la puntuacion como entero
             GameManager.GameManagerInstance.AddScore(10);
             TrySpawnPowerUp();
-
             DeactivateEnemy(); // aquí solo se desactiva, no se destruye
         }
     }
