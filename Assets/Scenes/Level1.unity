@@ -2813,9 +2813,17 @@ PrefabInstance:
       propertyPath: InitialModule.startColor.maxGradient.m_ColorSpace
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2101070632137228627, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2533039042199713141, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: m_Name
       value: R_Particle
+      objectReference: {fileID: 0}
+    - target: {fileID: 3304692758129828859, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3386665831396980502, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: m_Name
@@ -2832,6 +2840,22 @@ PrefabInstance:
     - target: {fileID: 4067127408169976274, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: bulletSpeed
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4326180935857024866, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4326180935857024866, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4326180935857024866, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.166
+      objectReference: {fileID: 0}
+    - target: {fileID: 4326180935857024866, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4744456433892154735, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: looping
@@ -2853,9 +2877,21 @@ PrefabInstance:
       propertyPath: InitialModule.startSize.minScalar
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 6884071592231175864, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7563189788167745653, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7731493156843071530, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: m_Name
       value: L
+      objectReference: {fileID: 0}
+    - target: {fileID: 8813608987326238893, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.233
       objectReference: {fileID: 0}
     - target: {fileID: 8841780458963229529, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
       propertyPath: m_Name
@@ -4343,11 +4379,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1396214697 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7352842924410061925, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
-  m_PrefabInstance: {fileID: 912380884}
-  m_PrefabAsset: {fileID: 0}
 --- !u!212 &1587442012 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 2269500248365759205, guid: 4136ab0e09b319f4a8737add7adb6274, type: 3}
@@ -4663,9 +4694,11 @@ MonoBehaviour:
   thrusterD: {fileID: 1860011504}
   thrusterBackward: {fileID: 896231659}
   thrusterForward: {fileID: 68073418}
-  spriteDefault: {fileID: 0}
-  spritePowerUpBoost: {fileID: 0}
-  shieldVisual: {fileID: 1396214697}
+  visualShield: {fileID: 0}
+  visualBoost: {fileID: 0}
+  visualPlayerDefault: {fileID: 0}
+  visualPlayerBoost: {fileID: 0}
+  shieldVisual: {fileID: 0}
   powerUpBoostSFX: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
   powerUpShieldSFX: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
   powerUpMultiShootSFX: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}

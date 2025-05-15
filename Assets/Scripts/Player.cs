@@ -1,8 +1,11 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
 public class Player : MonoBehaviour
 {
+    //instanciar los prefab directamente pasando las referencias en los puntos que quiera 
+
 
     [Header("Variables de la nave")]
     public float speed;
@@ -31,11 +34,10 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject thrusterForward;
 
     [Header("Player sprites")]
-    [SerializeField] private GameObject spriteDefault;
-    [SerializeField] private GameObject spritePowerUpBoost;
-
-    [Header("Power Ups Effects")]
-    [SerializeField] private GameObject shieldVisual;
+    [SerializeField] private GameObject visualShield;
+    [SerializeField] private SpriteRenderer visualBoost;
+    [SerializeField] private GameObject visualPlayerDefault;
+    [SerializeField] private GameObject visualPlayerBoost;
 
     [Header("Sound Effects")]
     [SerializeField] private AudioClip powerUpBoostSFX;
@@ -86,17 +88,23 @@ public class Player : MonoBehaviour
         startPos = new Vector2(0, -4);
 
         transform.position = startPos;
-        
-        shieldVisual.SetActive(false);
 
         //Poner los powerups a cero la primera vez que arrancamos
         isMultiShooting = false;
         hasShield = false;
         isSpeedBoosted = false;
 
-        //Para tener el sprite default y el del boost referenciados
-        spriteDefault = GameObject.Find("Player/PlayerSprites/SpriteDefautl");
-        spritePowerUpBoost = GameObject.Find("Player/PlayerSprites/SpritePowerUpBoost");
+        //Asignar referencias aprefabs hijos 
+
+        visualBoost = transform.Find("PlayerSpritePowerUpBoost").gameObject.GetComponent<SpriteRenderer>();
+        visualShield = transform.Find("PlayerSpriteShield").gameObject;
+        visualPlayerDefault = transform.Find("PlayerMainSprite").gameObject;
+        visualPlayerBoost = transform.Find("PlayerSpritePowerUpBoost").gameObject;
+
+        visualPlayerDefault.SetActive(true);
+        visualBoost.enabled = false;
+        visualShield.SetActive(false);
+        visualPlayerBoost.SetActive(false);
 
     }
 
@@ -104,9 +112,6 @@ public class Player : MonoBehaviour
     {
         HandleInput();
         HandleShooting();
-        HandleShield();
-        HandlePowerUpTimers();
-        Debug.Log("Time scale: " + Time.timeScale);
 
     }
 
@@ -136,32 +141,11 @@ public class Player : MonoBehaviour
             nextFireTime = Time.time + fireRate;
         }
     }
-
-    private void HandlePowerUpTimers()
-    {
-        if (isSpeedBoosted && Time.time >= speedBoostEndTime)
-        {
-            isSpeedBoosted = false;
-            uiManager.turnPowerUpOffByIndex(2);
-            if (spriteDefault != null)
-                spriteDefault.SetActive(true);
-
-            if (spritePowerUpBoost != null)
-                spritePowerUpBoost.SetActive(false);
-        }
-
-        if (isMultiShooting && Time.time >= multiShootEndTime)
-        {
-            uiManager.turnPowerUpOffByIndex(0);
-            isMultiShooting = false;
-        }
-    }
-
     public void Shoot()
     {
         if (isMultiShooting)
         {
-            // Opci�n A: Disparo triple tipo abanico
+            //Disparo triple tipo abanico
             float[] angles = { -multiShootAngle, 0, multiShootAngle };
 
             foreach (float angle in angles)
@@ -203,7 +187,7 @@ public class Player : MonoBehaviour
             else
             {
                 hasShield = false;
-                shieldVisual.SetActive(false);
+                visualShield.SetActive(false);
             }
         }
         else if (collision.CompareTag("PowerUpLife"))
@@ -259,41 +243,58 @@ public class Player : MonoBehaviour
 
     private void ActivateSpeedBoost()
     {
-        uiManager.turnPowerUpOnByIndex(0);
-        isSpeedBoosted = true;
-        speedBoostEndTime = Time.time + speedBoostDuration;
-
-        if (spriteDefault != null)
-            spriteDefault.SetActive(false);
-
-        if (spritePowerUpBoost != null)
-            spritePowerUpBoost.SetActive(true);
+        StartCoroutine(PowerUpCoroutineSpeed());
     }
 
     private void ActivateShield()
     {
-        uiManager.turnPowerUpOnByIndex(1);
-        hasShield = true;
-        shieldVisual.SetActive(true);
+        StartCoroutine(PowerUpCoroutineShield());
     }
 
     private void ActivateMultiShoot()
     {
-        uiManager.turnPowerUpOnByIndex(2);
-        isMultiShooting = true;
-        multiShootEndTime = Time.time + multiShootDuration;
+        StartCoroutine(PowerUpCoroutineMultiShoot());
     }
 
-    private void HandleShield()
+    private IEnumerator PowerUpCoroutineSpeed()
     {
-        if (hasShield)
-        {
-            shieldVisual.SetActive(true);
-        }
-        else
-        {
-            shieldVisual.SetActive(false);
-        }
+        isSpeedBoosted = true;
+        visualPlayerDefault.SetActive(false);
+        visualPlayerBoost.SetActive(true);
+        uiManager.turnPowerUpOnByIndex(0);
+        yield return new WaitForSeconds(speedBoostDuration);
+
+        isSpeedBoosted = false;
+        visualPlayerDefault.SetActive(true);
+        visualPlayerBoost.SetActive(false);
+        uiManager.turnPowerUpOffByIndex(0);
+        // Aquí la lógica visual/UI para desactivar el power-up
+    }
+
+
+
+    private IEnumerator PowerUpCoroutineShield()
+    {
+        hasShield = true;
+        visualShield.SetActive(true);
+        uiManager.turnPowerUpOnByIndex(1);
+        yield return new WaitForSeconds(speedBoostDuration);
+
+        hasShield = false;
+        visualShield.SetActive(false);
+        uiManager.turnPowerUpOffByIndex(1);
+        // Aquí la lógica visual/UI para desactivar el power-up
+    }
+
+    private IEnumerator PowerUpCoroutineMultiShoot()
+    {
+        isMultiShooting = true;
+        uiManager.turnPowerUpOnByIndex(2);
+        yield return new WaitForSeconds(speedBoostDuration);
+
+        isMultiShooting = false;
+        uiManager.turnPowerUpOffByIndex(2);
+        // Aquí la lógica visual/UI para desactivar el power-up
     }
 
     private void PlayPowerUpSound(AudioClip clip)
