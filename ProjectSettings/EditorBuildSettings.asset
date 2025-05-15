@@ -19,7 +19,10 @@ EditorBuildSettings:
     guid: da8c32995ae2965489cdda0cb97f516c
   - enabled: 1
     path: Assets/Scenes/Level2.unity
-    guid: 8631ea8f5c7bc144aabf95044dd4783d
+    guid: 1ff2e27ca2f0207468515f69ca00e358
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: f8a1e085584172e4aa7f826cd1cfd294
   - enabled: 0
     path: Assets/Scenes/PauseMenu.unity
     guid: 140081a7c47200b4da87eb50b489ffa9

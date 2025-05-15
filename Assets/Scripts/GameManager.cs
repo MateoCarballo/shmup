@@ -1,3 +1,4 @@
+using System.IO;
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
@@ -29,17 +30,28 @@ public class GameManager : MonoBehaviour
 
     private UiManager uiManager;
 
+    //Variables para guardar la puntuacion mas alta
+    private int highScore;
+    private string saveFilePath;
+
     private void Awake()
     {
+        
         //Patrón singleton
         if (GameManagerInstance != null && GameManagerInstance != this)
         {
             Destroy(gameObject);
+            GameManagerInstance.uiManager = GameObject.FindGameObjectWithTag("UiPanel").GetComponent<UiManager>();
         }
         else
         {
             GameManagerInstance = this;
+            GameManagerInstance.uiManager = GameObject.FindGameObjectWithTag("UiPanel").GetComponent<UiManager>();
             DontDestroyOnLoad(gameObject);
+
+
+            saveFilePath = Path.Combine(Application.persistentDataPath, "highscore.dat");
+            LoadHighScore();
         }
 
         //Inicializamos los valores que tendran al instanciar el objeto (Nivel1) con los valores base
@@ -49,9 +61,38 @@ public class GameManager : MonoBehaviour
         isShieldActive = false;
         isSpeedBoostActive = false;
         isMultipleShootActive = false;
-
         //Encontramos el UiManager para poder actualizar valores frente a eventos
         uiManager = GameObject.FindGameObjectWithTag("UiPanel").GetComponent<UiManager>();
+    }
+
+    public void SaveHighScore()
+    {
+        if (score > highScore)
+        {
+            highScore = score;
+            File.WriteAllText(saveFilePath, highScore.ToString());
+        }
+    }
+
+    private void LoadHighScore()
+    {
+        if (File.Exists(saveFilePath))
+        {
+            string content = File.ReadAllText(saveFilePath);
+            if (int.TryParse(content, out int loadedScore))
+            {
+                highScore = loadedScore;
+            }
+        }
+    }
+
+    public int GetCurrentScore() => score;
+    public int GetHighScore() => highScore;
+    public bool IsNewRecord() => score > highScore;
+
+    public void ResetCurrentScore()
+    {
+        score = 0;
     }
 
     public int getScore()
@@ -144,6 +185,11 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f; // Asegurar que el tiempo vuelve a la normalidad
         SceneManager.LoadScene("MainMenu"); // Cargar el menú principal
+    }
+
+    public void ResetParameters()
+    {
+        GameManagerInstance = null;
     }
 
 }
