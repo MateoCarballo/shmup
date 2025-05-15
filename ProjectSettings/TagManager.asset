@@ -18,6 +18,9 @@ TagManager:
   - Enemy
   - UiPanel
   - KillZone
+  - DefaultSprite
+  - HitSprite
+  - SpriteOutMapPosition
   layers:
   - Default
   - TransparentFX

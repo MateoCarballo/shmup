@@ -252,11 +252,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 20488132}
   m_CullTransparentMesh: 1
---- !u!1 &68073418 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3783898989079326626, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
-  m_PrefabInstance: {fileID: 912380884}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &149279328
 GameObject:
   m_ObjectHideFlags: 0
@@ -1159,11 +1154,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &521985798 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7731493156843071530, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
-  m_PrefabInstance: {fileID: 912380884}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &537088252
 GameObject:
   m_ObjectHideFlags: 0
@@ -2616,11 +2606,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 866075492}
   m_CullTransparentMesh: 1
---- !u!1 &896231659 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8841780458963229529, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
-  m_PrefabInstance: {fileID: 912380884}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &912380884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2873,6 +2858,16 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1796808113}
   m_SourcePrefab: {fileID: 100100000, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+--- !u!1 &912380885 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6940370447227579445, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+  m_PrefabInstance: {fileID: 912380884}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &912380886 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7563189788167745653, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
+  m_PrefabInstance: {fileID: 912380884}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &937927710
 GameObject:
   m_ObjectHideFlags: 0
@@ -4343,11 +4338,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1396214697 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7352842924410061925, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
-  m_PrefabInstance: {fileID: 912380884}
-  m_PrefabAsset: {fileID: 0}
 --- !u!212 &1587442012 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 2269500248365759205, guid: 4136ab0e09b319f4a8737add7adb6274, type: 3}
@@ -4655,26 +4645,26 @@ MonoBehaviour:
   shootPoint: {fileID: 589701800}
   bulletSpeed: 10
   fireRate: 0.2
-  hasShield: 0
-  isSpeedBoosted: 0
+  powerupsState: 00000000
   speedBoostMultiplier: 3
   speedBoostDuration: 5
-  thrusterL: {fileID: 521985798}
-  thrusterD: {fileID: 1860011504}
-  thrusterBackward: {fileID: 896231659}
-  thrusterForward: {fileID: 68073418}
-  spriteDefault: {fileID: 0}
-  spritePowerUpBoost: {fileID: 0}
-  shieldVisual: {fileID: 1396214697}
-  powerUpBoostSFX: {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
-  powerUpShieldSFX: {fileID: 8300000, guid: 890bf78c4d4dbf847a02654fd51029ef, type: 3}
-  powerUpMultiShootSFX: {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
-  powerUpLifeSFX: {fileID: 8300000, guid: e54be13c8a2a2054caec7839e3f68442, type: 3}
-  isMultiShooting: 1
   multiShootDuration: 5
   multiShootAngle: 15
-  multiShootFireRate: 0.1
-  shootSFX: {fileID: 8300000, guid: 1399c4dfafbcc7048b72122e7a9d8b18, type: 3}
+  shieldDuration: 5
+  powerupsSprites:
+  - {fileID: 912380886}
+  - {fileID: 912380885}
+  movementSprites:
+  - {fileID: 7358085200065004363, guid: 610c984608528474bae973f47d6a441c, type: 3}
+  - {fileID: 5471300103990450973, guid: c717e20afe4f05444bfa8a2e9e6fd70f, type: 3}
+  - {fileID: 8086226181754050788, guid: 0455a4226650e0d4c97f88dee28022c4, type: 3}
+  - {fileID: 7091333332546647709, guid: 75fe76429d92b4a4f8c147c130317718, type: 3}
+  powerUpsSFX:
+  - {fileID: 8300000, guid: 8ba3a2df58681c9419008259923709ec, type: 3}
+  - {fileID: 8300000, guid: f2a30acb064a3fa429baffc31e8c9a64, type: 3}
+  - {fileID: 8300000, guid: 76661e920857ab24bb43379c6d7b46af, type: 3}
+  - {fileID: 8300000, guid: e54be13c8a2a2054caec7839e3f68442, type: 3}
+  - {fileID: 8300000, guid: ea658c02d9f49e84cab58350d8b8009d, type: 3}
   uiManager: {fileID: 701961529}
 --- !u!1 &1810080087
 GameObject:
@@ -4893,11 +4883,6 @@ Transform:
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 9016962604881532618, guid: 8a067524f419f1047abdd042850564bd, type: 3}
   m_PrefabInstance: {fileID: 1355066345}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1860011504 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 933617348700955489, guid: 431450d01b9d6574b87c864dff7f6dfd, type: 3}
-  m_PrefabInstance: {fileID: 912380884}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1947729560
 GameObject:

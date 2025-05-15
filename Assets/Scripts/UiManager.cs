@@ -11,7 +11,7 @@ public class UiManager : MonoBehaviour
     [Header("Objetos visibles en la UI")]
     [SerializeField] private SpriteRenderer[] lifesSprites;
     private int uiCurrenLifesSprite;
-    [SerializeField] private SpriteRenderer[] powerUpsSprites;
+    [SerializeField] private GameObject[] powerUpsSprites;
 
     void Start()
     {
@@ -38,12 +38,12 @@ public class UiManager : MonoBehaviour
     //Activar simbolo de power up
     public void turnPowerUpOnByIndex(int index)
     {
-        powerUpsSprites[index].gameObject.SetActive(true);
+        powerUpsSprites[index].gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
     //Desactivar simbolo de power up
     public void turnPowerUpOffByIndex(int index)
     {
-        powerUpsSprites[index].gameObject.SetActive(false);
+        powerUpsSprites[index].gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }
 
 

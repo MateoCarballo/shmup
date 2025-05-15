@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     private float verticalInput, horizontalInput;
     private Vector2 startPos;
 
+    //Variable para tener un punto fuera donde colocar los objetos que contienen al asset
+    [SerializeField] private Transform positionOutMap;
+
     [Header("Shooting Settings")]
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform shootPoint;
@@ -31,6 +34,9 @@ public class Player : MonoBehaviour
     [Header("Power Up Sprites")]
     [SerializeField] private GameObject[] powerupsSprites = new GameObject[2]; // 0-SpriteShield,
                                                                                // 1-SpriteBoost
+                                                                               // 2-MainSprite
+
+    [SerializeField] private GameObject mainSprite;
 
     [Header("Movement Sprites")]
     [SerializeField] private GameObject[] movementSprites = new GameObject[4]; // 0:Left,
@@ -70,7 +76,7 @@ public class Player : MonoBehaviour
         {
             if (powerupsSprites[i] != null) powerupsSprites[i].SetActive(false);
         }
-       
+
         // Resetear estados de power-ups
         for (int i = 0; i < powerupsState.Length; i++)
         {
@@ -142,13 +148,30 @@ public class Player : MonoBehaviour
             movementSprites[3].SetActive(verticalInput < 0);   // Front
         }
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("EnemyBullet"))
+        if (collision.CompareTag("PowerUpLife"))
         {
-            //HandleBulletCollision(collision);
-
+            ActivePowerUpLife();
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("PowerUpBoost"))
+        {
+            ActiveBoolPowerUp(0);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("PowerUpShield"))
+        {
+            ActiveBoolPowerUp(1);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("PowerUpMultiShoot"))
+        {
+            ActiveBoolPowerUp(2);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.CompareTag("EnemyBullet"))
+        {
             if (!powerupsState[1]) // No tiene escudo
             {
                 GameManager.GameManagerInstance.QuitLife();
@@ -156,59 +179,113 @@ public class Player : MonoBehaviour
             else // Tiene escudo
             {
                 powerupsState[1] = false;
+                if (uiManager != null) uiManager.turnPowerUpOffByIndex(1);
+                if (powerupsSprites.Length > 1 && powerupsSprites[1] != null)
+                    powerupsSprites[1].SetActive(false);
             }
-        }
-        else if (collision.CompareTag("PowerUpBoost"))
-        {
-            ActiveBoolPowerUp(0);
-        }
-        else if (collision.CompareTag("PowerUpShield"))
-        {
-            ActiveBoolPowerUp(1);
-        }        
-        else if (collision.CompareTag("PowerUpMultiShoot"))
-        {
-            ActiveBoolPowerUp(2);
-        }
-        else if (collision.CompareTag("PowerUpLife"))
-        {
-            ActivePowerUpLife();
-        }
-        if (!collision.CompareTag("Enemy"))
-        {
             Destroy(collision.gameObject);
         }
     }
-
     private void ActiveBoolPowerUp(int powerUpStateIndex)
     {
-
-        powerupsState[powerUpStateIndex] = true;
-
-        PlaySound(powerUpsSFX[powerUpStateIndex]);
-
-        if (powerUpStateIndex == 0 || powerUpStateIndex == 1)
+        try
         {
-            powerupsSprites[powerUpStateIndex].SetActive(true);
-        }
+            if (powerUpStateIndex < 0 || powerUpStateIndex >= powerupsState.Length)
+                throw new System.IndexOutOfRangeException();
 
-        // Iniciar la corrutina para desactivarlo después del tiempo
-        StartCoroutine(DeactivatePowerUpAfterTime(powerUpStateIndex, 5f));  //############# AQUI METER CADA POWER UP CON SU TIEMPO SI QUIERO MODIFICARLOS ############# 
+            // Verificar que el índice es válido
+            if (powerUpStateIndex < 0 || powerUpStateIndex >= powerupsState.Length)
+            {
+                Debug.LogError($"Índice de power-up inválido: {powerUpStateIndex}");
+                return;
+            }
+
+            powerupsState[powerUpStateIndex] = true;
+
+            if (powerupsState[0] == true)
+            {
+                mainSprite.SetActive(false);
+            }
+
+            // Reproducir sonido solo si existe
+            if (powerUpStateIndex < powerUpsSFX.Length && powerUpsSFX[powerUpStateIndex] != null)
+            {
+                PlaySound(powerUpsSFX[powerUpStateIndex]);
+            }
+
+            // Actualizar UI solo para power-ups con UI (0-2)
+            if (powerUpStateIndex < 3 && uiManager != null)
+            {
+                uiManager.turnPowerUpOnByIndex(powerUpStateIndex);
+            }
+
+            // Activar sprites solo para los que tienen (0-1)
+            if (powerUpStateIndex < powerupsSprites.Length && powerupsSprites[powerUpStateIndex] != null)
+            {
+                powerupsSprites[powerUpStateIndex].SetActive(true);
+            }
+
+            // Solo iniciar corrutina para power-ups temporales (no vida)
+            if (powerUpStateIndex != 3) // 3 es Life
+            {
+                float duration = GetPowerUpDuration(powerUpStateIndex);
+                StartCoroutine(DeactivatePowerUpAfterTime(powerUpStateIndex, duration));
+            }
+        }
+        catch (System.IndexOutOfRangeException)
+        {
+            Debug.LogError($"Índice de power-up fuera de rango: {powerUpStateIndex}");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Error al activar power-up: {e.Message}");
+        }
     }
 
-    // Corrutina para desactivar el power-up
+    private float GetPowerUpDuration(int index)
+    {
+        switch (index)
+        {
+            case 0: return speedBoostDuration;
+            case 1: return shieldDuration;
+            case 2: return multiShootDuration;
+            default: return 5f;
+        }
+    }
+
     private IEnumerator DeactivatePowerUpAfterTime(int powerUpStateIndex, float duration)
     {
         yield return new WaitForSeconds(duration);
 
-        // Desactivar el power-up
-        powerupsState[powerUpStateIndex] = false;
+        // Verificar que el objeto Player todavía existe
+        if (this == null || !gameObject.activeInHierarchy)
+            yield break;
 
-        if (powerUpStateIndex == 0 || powerUpStateIndex == 1)
+        // Desactivar el power-up
+        if (powerUpStateIndex >= 0 && powerUpStateIndex < powerupsState.Length)
+        {
+            powerupsState[powerUpStateIndex] = false;
+        }
+
+        if (powerupsState[0] == false)
+        {
+            mainSprite.SetActive(true);
+        }
+
+        // Actualizar UI si existe
+        if (powerUpStateIndex < 3 && uiManager != null)
+        {
+            uiManager.turnPowerUpOffByIndex(powerUpStateIndex);
+        }
+
+        // Desactivar sprite si existe
+        if (powerUpStateIndex >= 0 &&
+            powerUpStateIndex < powerupsSprites.Length &&
+            powerupsSprites[powerUpStateIndex] != null)
         {
             powerupsSprites[powerUpStateIndex].SetActive(false);
         }
-        // Opcional: Mostrar en consola para debug
+
         Debug.Log($"PowerUp {powerUpStateIndex} desactivado automáticamente");
     }
 
