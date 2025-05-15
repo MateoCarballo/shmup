@@ -1,93 +1,72 @@
 using UnityEngine;
-using System;
 
 public class Enemy : MonoBehaviour
 {
-    public event Action<Enemy> OnEnemyDeactivated;
-
-    [Header("Referencias")]
-    public Rigidbody2D rb;
-    public Player player;
-
-    [Header("Movimiento Inicial")]
-    public float ufoVelocity = 1.5f;
-    public float ufoRotationVelocity = 125f;
-    private Vector2 moveTarget;
-    private bool hasTarget = false;
+    [Header("Movimiento")]
+    public float enterSpeed = 1.5f;
+    public float exitSpeed = 3f;
+    public float selfDestructTime = 15f;
+    private float timeAlive = 0f;
     private bool isEntering = true;
+    private bool isExiting = false;
+    private Vector2 moveTarget;
+    private Vector2 centerOffset;
+    private Vector2 exitDirection;
 
-    [Header("Movimiento Curva Infinita")]
-    [SerializeField] private float infinityTime = 0f;
+    [Header("Curva Infinita")]
     public float infinitySpeed = 1f;
     public float infinityWidthMultiplier = 0.1f;
     public float infinityHeightMultiplier = 0.04f;
     public float followLerpSpeed = 2f;
-    private Vector2 centerOffset;
+    private float infinityTime = 0f;
 
-    [Header("Rotación Visual del Sprite")]
-    [SerializeField] private Transform spriteTransform;
-    [SerializeField] private float spriteRotationSpeed = 200f;
-
-    [Header("Sistema de Disparo")]
-    [SerializeField] private GameObject enemyBulletPrefab;
-    [SerializeField] private float fireInterval = 5f;
+    [Header("Jugador y Disparo")]
+    public GameObject enemyBulletPrefab;
+    public Transform shootPoint;
+    public float bulletSpeed = 10f;
+    public float fireInterval = 5f;
     private float fireTimer = 0f;
 
-    [Header("Proyectiles")]
-    public GameObject bulletPrefab;
-    public Transform shootPoint;
-    [SerializeField] private float bulletSpeed = 10f;
+    [Header("Extras")]
+    public GameObject explosionPrefab;
+    public GameObject[] powerUpTypes;
 
-    [Header("Autodestrucción")]
-    [SerializeField] private float selfDestructTime = 15f;
-    private bool isExisting = false;
-    private float timeAlive = 0f;
-
-    [Header("Salida del Enemigo")]
-    [SerializeField] private float exitSpeed = 3f;
-    [SerializeField] private float exitDestroyDelay = 3f;
-    private bool isExiting = false;
-
-    [Header("Partículas y PowerUps")]
-    [SerializeField] private GameObject explosionPrefab;
-    [SerializeField] private GameObject[] powerUpTypes;
+    private Rigidbody2D rb;
+    private Transform player;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        player = FindFirstObjectByType<Player>();
         rb.freezeRotation = true;
+
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        GenerateEnemys.Instance.IncreaseActiveEnemies(); // notifica que hay un enemigo más
     }
 
     void Update()
     {
-        RotateSprite();
-
         if (isExiting) return;
 
-        if (hasTarget)
+        fireTimer += Time.deltaTime;
+        timeAlive += Time.deltaTime;
+
+        if (isEntering)
         {
-            if (isEntering)
+            MoveToEntry();
+        }
+        else if (!isExiting)
+        {
+            InfinityMove();
+
+            if (fireTimer >= fireInterval)
             {
-                moveEnemyToScene();
+                Shoot();
+                fireTimer = 0f;
             }
-            else
+
+            if (timeAlive >= selfDestructTime)
             {
-                InfinityMove();
-
-                fireTimer += Time.deltaTime;
-                timeAlive += Time.deltaTime;
-
-                if (fireTimer >= fireInterval)
-                {
-                    ShootPlayer();
-                    fireTimer = 0f;
-                }
-
-                if (timeAlive >= selfDestructTime && !isExisting)
-                {
-                    StartExit();
-                }
+                StartExit();
             }
         }
     }
@@ -96,43 +75,30 @@ public class Enemy : MonoBehaviour
     {
         if (isExiting)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.normalized.x * exitSpeed, 0);
+            rb.linearVelocity = exitDirection * exitSpeed;
+            return;
         }
+
+        if (!isEntering) return;
     }
 
-    private void OnBecameInvisible()
+    public void SetTarget(Vector2 target)
     {
-        if (isExiting)
-        {
-            OnEnemyDeactivated?.Invoke(this);
-        }
+        moveTarget = target;
     }
 
-    private void StartExit()
-    {
-        isExisting = true;
-        isExiting = true;
-        isEntering = false;
-        hasTarget = false;
-
-        float direction = UnityEngine.Random.value > 0.5f ? 1f : -1f;
-        rb.linearVelocity = new Vector2(direction * exitSpeed, 0);
-
-        Destroy(gameObject, exitDestroyDelay); // solo se destruye si se va volando
-    }
-
-    private void moveEnemyToScene()
+    private void MoveToEntry()
     {
         Vector2 direction = (moveTarget - (Vector2)transform.position).normalized;
-        rb.linearVelocity = direction * ufoVelocity;
+        rb.linearVelocity = direction * enterSpeed;
 
         if (Vector2.Distance(transform.position, moveTarget) < 0.05f)
         {
             transform.position = moveTarget;
             rb.linearVelocity = Vector2.zero;
-            centerOffset = transform.position - player.transform.position;
-            infinityTime = 0f;
             isEntering = false;
+            centerOffset = transform.position - player.position;
+            infinityTime = 0f;
             timeAlive = 0f;
         }
     }
@@ -141,108 +107,99 @@ public class Enemy : MonoBehaviour
     {
         infinityTime += Time.deltaTime * infinitySpeed;
         float t = infinityTime;
-        float denominator = 1 + Mathf.Pow(Mathf.Sin(t), 2);
-        float x = (infinityWidthMultiplier * Mathf.Cos(t)) / denominator;
-        float y = (infinityHeightMultiplier * Mathf.Sin(t) * Mathf.Cos(t)) / denominator;
-        Vector2 targetCenter = (Vector2)player.transform.position + centerOffset;
+        float denom = 1 + Mathf.Pow(Mathf.Sin(t), 2);
+        float x = (infinityWidthMultiplier * Mathf.Cos(t)) / denom;
+        float y = (infinityHeightMultiplier * Mathf.Sin(t) * Mathf.Cos(t)) / denom;
 
+        Vector2 targetCenter = (Vector2)player.position + centerOffset;
         Vector2 currentCenter = Vector2.Lerp(transform.position, targetCenter, Time.deltaTime * followLerpSpeed);
-        Vector2 newPosition = currentCenter + new Vector2(x, y);
-        rb.MovePosition(newPosition);
+        Vector2 desiredPosition = currentCenter + new Vector2(x, y);
+
+        Vector2 direction = (desiredPosition - (Vector2)transform.position).normalized;
+        float speed = Vector2.Distance(transform.position, desiredPosition) / Time.deltaTime;
+
+        Vector2 velocity = direction * speed;
+        rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, velocity, Time.deltaTime * 5f); //Usar interpolacion suavia los movimientos
     }
 
-    private void RotateSprite()
-    {
-        if (spriteTransform != null)
-        {
-            spriteTransform.Rotate(Vector3.forward * spriteRotationSpeed * Time.deltaTime);
-        }
-    }
-
-    public void SetTarget(Vector2 target)
-    {
-        moveTarget = target;
-        hasTarget = true;
-    }
-
-    private void ShootPlayer()
+    private void Shoot()
     {
         if (enemyBulletPrefab == null || player == null) return;
 
-        GameObject bullet = Instantiate(enemyBulletPrefab, transform.position, Quaternion.identity);
+        GameObject bullet = Instantiate(enemyBulletPrefab, shootPoint.position, Quaternion.identity);
         Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+        if (bulletRb == null) return;
 
-        if (bulletRb != null)
-        {
-            Vector2 playerPos = player.transform.position;
-            Vector2 playerVel = player.rb != null ? player.rb.linearVelocity : Vector2.zero;
-            float distance = Vector2.Distance(transform.position, playerPos);
-            float estimatedTime = distance / bulletSpeed;
-            Vector2 futurePos = playerPos + playerVel * estimatedTime;
-            Vector2 direction = (futurePos - (Vector2)transform.position).normalized;
-            bulletRb.linearVelocity = direction * bulletSpeed;
-        }
+        Vector2 playerPos = player.position;
+        Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
+        Vector2 playerVel = playerRb != null ? playerRb.linearVelocity : Vector2.zero;
+        float distance = Vector2.Distance(transform.position, playerPos);
+        float timeToHit = distance / bulletSpeed;
+        Vector2 futurePos = playerPos + playerVel * timeToHit;
+        Vector2 direction = (futurePos - (Vector2)transform.position).normalized;
+
+        bulletRb.linearVelocity = direction * bulletSpeed;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void StartExit()
     {
-        if (collision.CompareTag("Bullet"))
+        if (isExiting) return;
+
+        isExiting = true;
+        isEntering = false;
+
+        rb.linearVelocity = Vector2.zero;
+        rb.angularVelocity = 0f;
+
+        exitDirection = new Vector2(Random.value > 0.5f ? 1f : -1f, 0f);
+    }
+
+    public void ForceDeactivate()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        if (GenerateEnemys.Instance != null)
+            GenerateEnemys.Instance.DecreaseActiveEnemies();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Bullet"))
         {
-            SpawnDeathEffect();
-            Destroy(collision.gameObject);
-            //Registramos la puntuacion como entero
+            Destroy(other.gameObject);
+            SpawnExplosion();
             GameManager.GameManagerInstance.AddScore(10);
             TrySpawnPowerUp();
-            DeactivateEnemy(); // aquí solo se desactiva, no se destruye
+            Destroy(gameObject);
+        }
+
+        if (other.CompareTag("KillZone"))
+        {
+            Destroy(gameObject);
         }
     }
 
-    private void SpawnDeathEffect()
+    private void SpawnExplosion()
     {
         if (explosionPrefab != null)
         {
-            GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-            Destroy(explosion, 2f);
-        }
-    }
-
-    private void DeactivateEnemy()
-    {
-        ResetEnemyState();
-        gameObject.SetActive(false);
-        OnEnemyDeactivated?.Invoke(this);
-    }
-
-    private void ResetEnemyState()
-    {
-        isEntering = true;
-        hasTarget = true;
-        isExiting = false;
-        isExisting = false;
-        timeAlive = 0f;
-        fireTimer = 0f;
-
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
+            GameObject exp = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(exp, 2f);
         }
     }
 
     private void TrySpawnPowerUp()
     {
-        if (powerUpTypes != null && powerUpTypes.Length > 0 && UnityEngine.Random.value <= 1f)
+        if (powerUpTypes.Length > 0 && Random.value < 1f) // siempre lanza uno, cambia si quieres probabilidad
         {
-            int index = UnityEngine.Random.Range(0, powerUpTypes.Length);
-            if (powerUpTypes[index] != null)
-            {
-                GameObject powerUp = Instantiate(powerUpTypes[index], transform.position, Quaternion.identity);
-                Rigidbody2D rbPowerUp = powerUp.GetComponent<Rigidbody2D>();
-                if (rbPowerUp != null)
-                {
-                    rbPowerUp.linearVelocity = new Vector2(0, -5f);
-                }
-            }
+            int index = Random.Range(0, powerUpTypes.Length);
+            GameObject powerUp = Instantiate(powerUpTypes[index], transform.position, Quaternion.identity);
+            Rigidbody2D rbPowerUp = powerUp.GetComponent<Rigidbody2D>();
+            if (rbPowerUp != null)
+                rbPowerUp.linearVelocity = new Vector2(0, -5f);
         }
     }
 }

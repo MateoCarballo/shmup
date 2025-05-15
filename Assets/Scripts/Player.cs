@@ -3,16 +3,12 @@ using UnityEngine.Audio;
 
 public class Player : MonoBehaviour
 {
-    [Header("Variables de la nave")]
-    public float speed = 5f;
-    public Rigidbody2D rb;
-    private float verticalInput, horizontalInput = 0f;
-    private Vector2 startPos = new Vector2(0, -4);
-    private Vector3 originalScale;
 
-    [Header("Variables de la interpolacion de giro")]
-    public float leanAmount = 0.5f;
-    public float leanSmoothness = 3f;
+    [Header("Variables de la nave")]
+    public float speed;
+    public Rigidbody2D rb;
+    private float verticalInput, horizontalInput;
+    private Vector2 startPos;
 
     [Header("Bullet variables")]
     [SerializeField] public GameObject bulletPrefab;
@@ -34,9 +30,11 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject thrusterBackward;
     [SerializeField] private GameObject thrusterForward;
 
-    [Header("Particle Effects")]
-    [SerializeField] private ParticleSystem thrusterEffect1;
-    [SerializeField] private ParticleSystem thrusterEffect2;
+    [Header("Player sprites")]
+    [SerializeField] private GameObject spriteDefault;
+    [SerializeField] private GameObject spritePowerUpBoost;
+
+    [Header("Power Ups Effects")]
     [SerializeField] private GameObject shieldVisual;
 
     [Header("Sound Effects")]
@@ -55,17 +53,40 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip shootSFX;
     private AudioSource audioSource;
 
-    private GameObject spriteDefault;
-    private GameObject spritePowerUpBoost;
-
     [Header("UiManager")]
     [SerializeField] private UiManager uiManager;
 
+
+    //public static Player Instance { get; private set; }
+    private void Awake()
+    {
+        /*
+         * //Patrón singleton
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+         */
+
+        rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
+    }
+
     void Start()
     {
+        //Asignar variables de la nave
+        speed = 5f;
+        verticalInput = 0f;
+        horizontalInput = 0f;
+        startPos = new Vector2(0, -4);
+
         transform.position = startPos;
-        originalScale = transform.localScale;
-        audioSource = GetComponent<AudioSource>();
+        
         shieldVisual.SetActive(false);
 
         //Poner los powerups a cero la primera vez que arrancamos
@@ -74,18 +95,19 @@ public class Player : MonoBehaviour
         isSpeedBoosted = false;
 
         //Para tener el sprite default y el del boost referenciados
-        spriteDefault = GameObject.Find("Player/Sprite/SpriteDefautl");
-        spritePowerUpBoost = GameObject.Find("Player/Sprite/SpritePowerUpBoost");
-       
+        spriteDefault = GameObject.Find("Player/PlayerSprites/SpriteDefautl");
+        spritePowerUpBoost = GameObject.Find("Player/PlayerSprites/SpritePowerUpBoost");
+
     }
 
     void Update()
     {
         HandleInput();
-        HandleLeanAnimation();
         HandleShooting();
         HandleShield();
         HandlePowerUpTimers();
+        Debug.Log("Time scale: " + Time.timeScale);
+
     }
 
     private void HandleInput()
@@ -106,14 +128,6 @@ public class Player : MonoBehaviour
         }
         rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, verticalInput * currentSpeed);
     }
-
-    private void HandleLeanAnimation()
-    {
-        float targetScaleX = originalScale.x - Mathf.Abs(horizontalInput) * leanAmount;
-        float currentXScale = Mathf.Lerp(transform.localScale.x, targetScaleX, Time.deltaTime * leanSmoothness);
-        transform.localScale = new Vector3(currentXScale, originalScale.y, originalScale.z);
-    }
-
     private void HandleShooting()
     {
         if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)

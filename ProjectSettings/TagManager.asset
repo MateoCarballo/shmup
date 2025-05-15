@@ -17,6 +17,7 @@ TagManager:
   - Shield
   - Enemy
   - UiPanel
+  - KillZone
   layers:
   - Default
   - TransparentFX

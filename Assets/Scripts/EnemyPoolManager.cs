@@ -40,76 +40,31 @@ public class GenerateEnemys : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        InitializePool(5);
-        TrySpawnEnemy();
-    }
-
     void Update()
     {
         if (!levelCompleted && enemiesSpawned < totalEnemiesToSpawn && Time.time - lastSpawnTime > spawnDelay)
-
         {
             TrySpawnEnemy();
             lastSpawnTime = Time.time;
         }
 
         // Comprobar si se debe completar el nivel
-        // Se avanza si:
-        // 1. Todos los enemigos han sido generados y ya no quedan enemigos activos
-        // 2. Todos los enemigos han sido eliminados (han pasado o han sido destruidos)
         if (!levelCompleted && enemiesSpawned >= totalEnemiesToSpawn && enemiesActive <= 0)
         {
-            // Log: Para verificar si la condición se cumple
             Debug.Log("Nivel completado. Avanzando al siguiente nivel.");
             StartCoroutine(CompleteLevel());
         }
     }
 
-    private void InitializePool(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            CreateNewEnemy();
-        }
-    }
-
-    private void CreateNewEnemy()
-    {
-        GameObject enemy = Instantiate(ufoPrefab, spawnPoint.position, Quaternion.identity);
-        Enemy enemyComponent = enemy.GetComponent<Enemy>();
-        enemyComponent.SetTarget(targetPosition.position);
-
-        // Registrar eventos
-        //enemyComponent.OnEnemyDestroyed += HandleEnemyDestroyed;
-        enemyComponent.OnEnemyDeactivated += HandleEnemyDeactivated;
-
-        enemy.SetActive(false);
-        enemyPool.Add(enemy);
-    }
-
     private void TrySpawnEnemy()
     {
-        foreach (var enemy in enemyPool)
-        {
-            if (!enemy.activeInHierarchy && enemiesSpawned < totalEnemiesToSpawn)
-            {
-                ActivateEnemy(enemy);
-                enemiesSpawned++;
-                enemiesActive++;
-                Debug.Log("Enemigos generados: " + enemiesSpawned);
-                return;
-            }
-        }
-
-        // Si no hay enemigos disponibles y aún podemos generar más
         if (enemiesSpawned < totalEnemiesToSpawn)
         {
-            CreateNewEnemy();
-            ActivateEnemy(enemyPool[enemyPool.Count - 1]);
+            GameObject enemy = Instantiate(ufoPrefab, spawnPoint.position, Quaternion.identity);
+            Enemy enemyComponent = enemy.GetComponent<Enemy>();
+            enemyComponent.SetTarget(targetPosition.position);
             enemiesSpawned++;
-            enemiesActive++;
+
             Debug.Log("Enemigos generados: " + enemiesSpawned);
         }
     }
@@ -122,38 +77,27 @@ public class GenerateEnemys : MonoBehaviour
         enemy.GetComponent<Enemy>().SetTarget(targetPosition.position);
         enemy.SetActive(true);
     }
-
-    private void HandleEnemyDestroyed(Enemy enemy)
+    public void IncreaseActiveEnemies()
     {
-        // Reducir los enemigos activos cuando un enemigo es destruido
-        enemiesActive--;
-        Debug.Log("Enemigos activos después de la destrucción: " + enemiesActive);
-        //enemy.OnEnemyDestroyed -= HandleEnemyDestroyed;
-        enemy.OnEnemyDeactivated -= HandleEnemyDeactivated;
+        enemiesActive++;
     }
 
-    private void HandleEnemyDeactivated(Enemy enemy)
+    public void DecreaseActiveEnemies()
     {
-        // Reducir los enemigos activos si un enemigo es desactivado (por ejemplo, si ha salido de pantalla)
         enemiesActive--;
-        Debug.Log("Enemigos activos después de la desactivación: " + enemiesActive);
     }
 
     private IEnumerator CompleteLevel()
     {
         levelCompleted = true;
 
-        // 1. Hacer que la nave salga volando
+        // Si tienes una animación o lógica para que la nave salga, puedes llamarla aquí
         if (playerShip != null)
         {
-           // playerShip.ExitLevel();
+            // playerShip.ExitLevel();
         }
 
-        // 2. Esperar el tiempo de delay
         yield return new WaitForSeconds(levelEndDelay);
-
-        // 3. Cargar siguiente nivel
-        Debug.Log("Cargando el siguiente nivel...");
         LoadNextLevel();
     }
 
@@ -167,8 +111,7 @@ public class GenerateEnemys : MonoBehaviour
         }
         else
         {
-            // Si no hay más escenas, volver al menú principal
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(0); // Volver al menú principal si no hay más escenas
         }
     }
 }

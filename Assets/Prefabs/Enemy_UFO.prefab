@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 2243899790722808280}
   - component: {fileID: 4383465100603583856}
   - component: {fileID: -4664262492531025354}
-  - component: {fileID: -5218584629174040369}
+  - component: {fileID: 5951686245118834307}
   m_Layer: 0
   m_Name: Enemy_UFO
   m_TagString: Enemy
@@ -186,7 +186,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.455
---- !u!114 &-5218584629174040369
+--- !u!114 &5951686245118834307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -198,25 +198,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d951969b67878f2428e3093427399258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 4383465100603583856}
-  player: {fileID: 0}
-  ufoVelocity: 2.5
-  ufoRotationVelocity: 150
-  infinityTime: 0
+  enterSpeed: 6
+  exitSpeed: 9
+  selfDestructTime: 10
   infinitySpeed: 1
   infinityWidthMultiplier: 0.1
   infinityHeightMultiplier: 0.04
   followLerpSpeed: 2
-  spriteTransform: {fileID: 1717361582101497465}
-  spriteRotationSpeed: 200
   enemyBulletPrefab: {fileID: 4069657004465444412, guid: bcf84396b13af5247a7a0af2cafaaa77, type: 3}
-  fireInterval: 5
-  bulletPrefab: {fileID: 4069657004465444412, guid: bcf84396b13af5247a7a0af2cafaaa77, type: 3}
   shootPoint: {fileID: 347499110259833517}
-  bulletSpeed: 5
-  selfDestructTime: 20
-  exitSpeed: 3
-  exitDestroyDelay: 3
+  bulletSpeed: 8
+  fireInterval: 3
   explosionPrefab: {fileID: 6544610596184455184, guid: 8c5366605054bc242a5bcd5141dbbea1, type: 3}
   powerUpTypes:
   - {fileID: 5875909489958307084, guid: db558697309baf849af53904df72c064, type: 3}
