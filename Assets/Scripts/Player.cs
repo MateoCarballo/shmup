@@ -1,303 +1,225 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Audio;
 
 public class Player : MonoBehaviour
 {
-    //instanciar los prefab directamente pasando las referencias en los puntos que quiera 
-
-
-    [Header("Variables de la nave")]
-    public float speed;
+    [Header("Movement Settings")]
+    public float speed = 5f;
     public Rigidbody2D rb;
     private float verticalInput, horizontalInput;
     private Vector2 startPos;
 
-    [Header("Bullet variables")]
-    [SerializeField] public GameObject bulletPrefab;
-    [SerializeField] public Transform shootPoint;
+    [Header("Shooting Settings")]
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform shootPoint;
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private float fireRate = 0.2f;
     private float nextFireTime = 0f;
 
-    [Header("Power Up Settings")]
-    [SerializeField] private bool hasShield = false;
-    [SerializeField] private bool isSpeedBoosted = false;
-    [SerializeField] private float speedBoostMultiplier = 3f;
+    [Header("Power Ups State")]
+    [SerializeField] private bool[] powerupsState = { false, false, false, false }; // 0-Speed, 1-Shield, 2-MultiShoot, 3-Life
+
+    [Header("Power Ups Contants")]
+    [SerializeField] private float speedBoostMultiplier = 2f;
     [SerializeField] private float speedBoostDuration = 5f;
-    private float speedBoostEndTime = 0f;
+    [SerializeField] private float multiShootDuration = 5f;
+    [SerializeField] private float multiShootAngle = 15f;
+    [SerializeField] private float shieldDuration = 5f;
 
-    [Header("Thrusters")]
-    [SerializeField] private GameObject thrusterL;
-    [SerializeField] private GameObject thrusterD;
-    [SerializeField] private GameObject thrusterBackward;
-    [SerializeField] private GameObject thrusterForward;
+    [Header("Power Up Sprites")]
+    [SerializeField] private GameObject[] powerupsSprites = new GameObject[2]; // 0-SpriteShield,
+                                                                               // 1-SpriteBoost
 
-    [Header("Player sprites")]
-    [SerializeField] private GameObject visualShield;
-    [SerializeField] private SpriteRenderer visualBoost;
-    [SerializeField] private GameObject visualPlayerDefault;
-    [SerializeField] private GameObject visualPlayerBoost;
+    [Header("Movement Sprites")]
+    [SerializeField] private GameObject[] movementSprites = new GameObject[4]; // 0:Left,
+                                                                               // 1:Right,
+                                                                               // 2:Back,
+                                                                               // 3:Front   
 
-    [Header("Sound Effects")]
-    [SerializeField] private AudioClip powerUpBoostSFX;
-    [SerializeField] private AudioClip powerUpShieldSFX;
-    [SerializeField] private AudioClip powerUpMultiShootSFX;
-    [SerializeField] private AudioClip powerUpLifeSFX;
-
-    [Header("MultiShoot")]
-    [SerializeField] private bool isMultiShooting;
-    [SerializeField] private float multiShootDuration = 3f;
-    private float multiShootEndTime = 0f;
-    [SerializeField] private float multiShootAngle = 15f; // Disparo en un cono
-    [SerializeField] private float multiShootFireRate = 0.1f; // Fuego mas rapido no usado
-
-    [SerializeField] private AudioClip shootSFX;
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip[] powerUpsSFX = new AudioClip[5]; // 0-SpeedBoostSFX,
+                                                                         // 1-ShieldSFX,
+                                                                         // 2-MultiShootSFX,
+                                                                         // 3-AddLifeSFX,
+                                                                         // 4-ShootSFX
     private AudioSource audioSource;
 
-    [Header("UiManager")]
+    [Header("UI Reference")]
     [SerializeField] private UiManager uiManager;
 
-
-    //public static Player Instance { get; private set; }
     private void Awake()
     {
-        /*
-         * //Patrón singleton
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-         */
-
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
     }
 
     void Start()
     {
-        //Asignar variables de la nave
-        speed = 5f;
-        verticalInput = 0f;
-        horizontalInput = 0f;
-        startPos = new Vector2(0, -4);
+        InitializePlayer();
+    }
 
+    private void InitializePlayer()
+    {
+        startPos = new Vector2(0, -4);
         transform.position = startPos;
 
-        //Poner los powerups a cero la primera vez que arrancamos
-        isMultiShooting = false;
-        hasShield = false;
-        isSpeedBoosted = false;
-
-        //Asignar referencias aprefabs hijos 
-
-        visualBoost = transform.Find("PlayerSpritePowerUpBoost").gameObject.GetComponent<SpriteRenderer>();
-        visualShield = transform.Find("PlayerSpriteShield").gameObject;
-        visualPlayerDefault = transform.Find("PlayerMainSprite").gameObject;
-        visualPlayerBoost = transform.Find("PlayerSpritePowerUpBoost").gameObject;
-
-        visualPlayerDefault.SetActive(true);
-        visualBoost.enabled = false;
-        visualShield.SetActive(false);
-        visualPlayerBoost.SetActive(false);
-
+        // Asegurar que todos los efectos visuales empiezan desactivados
+        for (int i = 0; i < powerupsSprites.Length; i++)
+        {
+            if (powerupsSprites[i] != null) powerupsSprites[i].SetActive(false);
+        }
+       
+        // Resetear estados de power-ups
+        for (int i = 0; i < powerupsState.Length; i++)
+        {
+            powerupsState[i] = false;
+        }
     }
 
     void Update()
     {
         HandleInput();
         HandleShooting();
-
     }
 
     private void HandleInput()
     {
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        UpdateThrusters();
-        float currentSpeed;
-        if (isSpeedBoosted)
-        {
-            currentSpeed = speed * speedBoostMultiplier;
-            uiManager.turnPowerUpOnByIndex(0);
-        }
-        else
-        {
-            currentSpeed = speed;
-            uiManager.turnPowerUpOffByIndex(0);
-        }
+        UpdateMovementSprites();
+
+        float currentSpeed = powerupsState[0] ? speed * speedBoostMultiplier : speed;
         rb.linearVelocity = new Vector2(horizontalInput * currentSpeed, verticalInput * currentSpeed);
     }
+
     private void HandleShooting()
     {
-        if (Input.GetKey(KeyCode.Space) && Time.time >= nextFireTime)
+        if (Input.GetKey(KeyCode.Space))
         {
-            Shoot();
-            nextFireTime = Time.time + fireRate;
+            if (Time.time >= nextFireTime)
+            {
+                Shoot();
+                nextFireTime = Time.time + fireRate;
+            }
         }
     }
-    public void Shoot()
-    {
-        if (isMultiShooting)
-        {
-            //Disparo triple tipo abanico
-            float[] angles = { -multiShootAngle, 0, multiShootAngle };
 
+    private void Shoot()
+    {
+        if (powerupsState[2]) // Multi-shoot activo
+        {
+            float[] angles = { -multiShootAngle, 0, multiShootAngle };
             foreach (float angle in angles)
             {
                 Quaternion rotation = Quaternion.Euler(0, 0, angle);
-                GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, rotation);
-                Vector2 direction = rotation * Vector2.up;
-                bullet.GetComponent<Rigidbody2D>().linearVelocity = direction * bulletSpeed;
+                InstantiateBullet(shootPoint.position, rotation);
             }
         }
-        else
+        else // Disparo normal
         {
-            // Disparo normal
-            GameObject bullet = Instantiate(bulletPrefab, shootPoint.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody2D>().linearVelocity = Vector2.up * bulletSpeed;
+            InstantiateBullet(shootPoint.position, Quaternion.identity);
         }
 
-        if (shootSFX != null) audioSource.PlayOneShot(shootSFX);
+        PlaySound(powerUpsSFX[4]);
     }
 
-    private void UpdateThrusters()
+    private void InstantiateBullet(Vector2 position, Quaternion rotation)
     {
-        thrusterL.SetActive(horizontalInput < 0);
-        thrusterD.SetActive(horizontalInput > 0);
-        thrusterBackward.SetActive(verticalInput > 0);
-        thrusterForward.SetActive(verticalInput < 0);
+        GameObject bullet = Instantiate(bulletPrefab, position, rotation);
+        Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+        bulletRb.linearVelocity = rotation * Vector2.up * bulletSpeed;
+    }
+
+    private void UpdateMovementSprites()
+    {
+        if (movementSprites.Length >= 4)
+        {
+            movementSprites[0].SetActive(horizontalInput < 0); // Left
+            movementSprites[1].SetActive(horizontalInput > 0); // Right
+            movementSprites[2].SetActive(verticalInput > 0);   // Back
+            movementSprites[3].SetActive(verticalInput < 0);   // Front
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("EnemyBullet"))
         {
-            HandleBulletCollision(collision);
+            //HandleBulletCollision(collision);
 
-            if (!hasShield)
+            if (!powerupsState[1]) // No tiene escudo
             {
                 GameManager.GameManagerInstance.QuitLife();
             }
-            else
+            else // Tiene escudo
             {
-                hasShield = false;
-                visualShield.SetActive(false);
+                powerupsState[1] = false;
             }
+        }
+        else if (collision.CompareTag("PowerUpBoost"))
+        {
+            ActiveBoolPowerUp(0);
+        }
+        else if (collision.CompareTag("PowerUpShield"))
+        {
+            ActiveBoolPowerUp(1);
+        }        
+        else if (collision.CompareTag("PowerUpMultiShoot"))
+        {
+            ActiveBoolPowerUp(2);
         }
         else if (collision.CompareTag("PowerUpLife"))
         {
             ActivePowerUpLife();
-            PlayPowerUpSound(powerUpLifeSFX);
-            Destroy(collision.gameObject);
         }
-        else if (collision.CompareTag("PowerUpBoost"))
+        if (!collision.CompareTag("Enemy"))
         {
-            ActivateSpeedBoost();
-            PlayPowerUpSound(powerUpBoostSFX);
-            Destroy(collision.gameObject);
-        }
-        else if (collision.CompareTag("PowerUpShield"))
-        {
-            ActivateShield();
-            PlayPowerUpSound(powerUpShieldSFX);
-            Destroy(collision.gameObject);
-        }
-        else if (collision.CompareTag("PowerUpMultiShoot"))
-        {
-            ActivateMultiShoot();
-            PlayPowerUpSound(powerUpMultiShootSFX);
             Destroy(collision.gameObject);
         }
     }
 
-    private void HandleBulletCollision(Collider2D bulletCollider)
+    private void ActiveBoolPowerUp(int powerUpStateIndex)
     {
-        var sprites = bulletCollider.GetComponentsInChildren<SpriteRenderer>(true);
-        if (sprites.Length >= 2)
+
+        powerupsState[powerUpStateIndex] = true;
+
+        PlaySound(powerUpsSFX[powerUpStateIndex]);
+
+        if (powerUpStateIndex == 0 || powerUpStateIndex == 1)
         {
-            sprites[0].gameObject.SetActive(false);
-            sprites[1].gameObject.SetActive(true);
+            powerupsSprites[powerUpStateIndex].SetActive(true);
         }
 
-        var rb = bulletCollider.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-            rb.bodyType = RigidbodyType2D.Kinematic;
-        }
+        // Iniciar la corrutina para desactivarlo después del tiempo
+        StartCoroutine(DeactivatePowerUpAfterTime(powerUpStateIndex, 5f));  //############# AQUI METER CADA POWER UP CON SU TIEMPO SI QUIERO MODIFICARLOS ############# 
+    }
 
-        Destroy(bulletCollider.gameObject, 0.1f);
+    // Corrutina para desactivar el power-up
+    private IEnumerator DeactivatePowerUpAfterTime(int powerUpStateIndex, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        // Desactivar el power-up
+        powerupsState[powerUpStateIndex] = false;
+
+        if (powerUpStateIndex == 0 || powerUpStateIndex == 1)
+        {
+            powerupsSprites[powerUpStateIndex].SetActive(false);
+        }
+        // Opcional: Mostrar en consola para debug
+        Debug.Log($"PowerUp {powerUpStateIndex} desactivado automáticamente");
     }
 
     private void ActivePowerUpLife()
     {
+        // Llamamos a añadir vida y si tengo las maximas no sumo nada ni en el estado ni en el UI
         GameManager.GameManagerInstance.AddLife();
+        PlaySound(powerUpsSFX[3]);
     }
 
-    private void ActivateSpeedBoost()
-    {
-        StartCoroutine(PowerUpCoroutineSpeed());
-    }
-
-    private void ActivateShield()
-    {
-        StartCoroutine(PowerUpCoroutineShield());
-    }
-
-    private void ActivateMultiShoot()
-    {
-        StartCoroutine(PowerUpCoroutineMultiShoot());
-    }
-
-    private IEnumerator PowerUpCoroutineSpeed()
-    {
-        isSpeedBoosted = true;
-        visualPlayerDefault.SetActive(false);
-        visualPlayerBoost.SetActive(true);
-        uiManager.turnPowerUpOnByIndex(0);
-        yield return new WaitForSeconds(speedBoostDuration);
-
-        isSpeedBoosted = false;
-        visualPlayerDefault.SetActive(true);
-        visualPlayerBoost.SetActive(false);
-        uiManager.turnPowerUpOffByIndex(0);
-        // Aquí la lógica visual/UI para desactivar el power-up
-    }
-
-
-
-    private IEnumerator PowerUpCoroutineShield()
-    {
-        hasShield = true;
-        visualShield.SetActive(true);
-        uiManager.turnPowerUpOnByIndex(1);
-        yield return new WaitForSeconds(speedBoostDuration);
-
-        hasShield = false;
-        visualShield.SetActive(false);
-        uiManager.turnPowerUpOffByIndex(1);
-        // Aquí la lógica visual/UI para desactivar el power-up
-    }
-
-    private IEnumerator PowerUpCoroutineMultiShoot()
-    {
-        isMultiShooting = true;
-        uiManager.turnPowerUpOnByIndex(2);
-        yield return new WaitForSeconds(speedBoostDuration);
-
-        isMultiShooting = false;
-        uiManager.turnPowerUpOffByIndex(2);
-        // Aquí la lógica visual/UI para desactivar el power-up
-    }
-
-    private void PlayPowerUpSound(AudioClip clip)
+    private void PlaySound(AudioClip clip)
     {
         if (clip != null && audioSource != null)
         {
