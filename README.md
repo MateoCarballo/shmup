@@ -4,11 +4,18 @@
 ![License](https://img.shields.io/github/license/MateoCarballo/shmup)
 ![Languages](https://img.shields.io/github/languages/top/MateoCarballo/shmup)
 
-![Enlace itch.io](https://srcalico.itch.io/velocidad-total)
+
 
 > Un clásico moderno de los shoot 'em up, desarrollado en Unity. ¡Sobrevive a oleadas de OVNIs enemigos, esquiva disparos, recoge power-ups y salva la galaxia!
 
 ---
+# 🚀 Velocidad Total - Enalce a itch.io 
+<p align="center">
+  <img src="https://img.shields.io/badge/ITCH.IO-FA5C5C?style=for-the-badge&logo=itch.io&logoColor=white" alt="itch.io">
+  <a href="https://srcalico.itch.io/velocidad-total">
+    <img src="https://img.shields.io/badge/JUEGA_AHORA-FF5722?style=for-the-badge&logo=gamejolt&logoColor=white" alt="Juega ahora">
+  </a>
+</p>
 
 ## 🎮 ¿Qué es un Shoot 'Em Up?
 
