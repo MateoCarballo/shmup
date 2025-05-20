@@ -4,6 +4,8 @@
 ![License](https://img.shields.io/github/license/MateoCarballo/shmup)
 ![Languages](https://img.shields.io/github/languages/top/MateoCarballo/shmup)
 
+![Enlace itch.io](https://srcalico.itch.io/velocidad-total)
+
 > Un clásico moderno de los shoot 'em up, desarrollado en Unity. ¡Sobrevive a oleadas de OVNIs enemigos, esquiva disparos, recoge power-ups y salva la galaxia!
 
 ---
