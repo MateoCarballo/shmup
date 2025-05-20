@@ -9,12 +9,16 @@
 > Un clásico moderno de los shoot 'em up, desarrollado en Unity. ¡Sobrevive a oleadas de OVNIs enemigos, esquiva disparos, recoge power-ups y salva la galaxia!
 
 ---
-# 🚀 Velocidad Total - Enalce a itch.io 
+
 <p align="center">
   <img src="https://img.shields.io/badge/ITCH.IO-FA5C5C?style=for-the-badge&logo=itch.io&logoColor=white" alt="itch.io">
   <a href="https://srcalico.itch.io/velocidad-total">
     <img src="https://img.shields.io/badge/JUEGA_AHORA-FF5722?style=for-the-badge&logo=gamejolt&logoColor=white" alt="Juega ahora">
   </a>
+</p>
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x400?text=Banner+del+Juego+(Reemplaza+con+tu+imagen)" alt="Banner del juego" width="100%">
 </p>
 
 ## 🎮 ¿Qué es un Shoot 'Em Up?
